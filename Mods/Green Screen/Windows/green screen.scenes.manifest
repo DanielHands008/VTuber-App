@@ -1,0 +1,45 @@
+ManifestFileVersion: 0
+CRC: 3038727123
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f7d27d1fa78c78e0ca99d6e4664d6b84
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a4dd6f50e448e899582db0d68a990880
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 104
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 466822230, guid: 202316ca4096bc741bf169dadc82fbdf, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 157
+  Script: {instanceID: 0}
+- Class: 196
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Scenes/Green Screen-Green Screen.unity
+Dependencies: []

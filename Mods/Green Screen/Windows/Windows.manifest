@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3747917639
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: green screen.scenes
+      Dependencies: {}
