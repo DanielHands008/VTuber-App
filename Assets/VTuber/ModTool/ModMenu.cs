@@ -11,7 +11,7 @@ using ModTool;
 public class ModMenu : MonoBehaviour
 {
     private ModManager modManager;
-    
+
     private Dictionary<Mod, ModItem> modItems;
 
     /// <summary>
@@ -35,11 +35,11 @@ public class ModMenu : MonoBehaviour
     private bool isLoaded;
 
     public Light DefaultLight;
-        
+
     void Start()
     {
         modItems = new Dictionary<Mod, ModItem>();
-        
+
         modManager = ModManager.instance;
 
         modManager.refreshInterval = 2;
@@ -51,10 +51,10 @@ public class ModMenu : MonoBehaviour
         modManager.ModRemoved += OnModRemoved;
         modManager.ModLoaded += OnModLoaded;
         modManager.ModUnloaded += OnModUnloaded;
-        
-        Application.runInBackground = true;        
+
+        Application.runInBackground = true;
     }
-   
+
     private void OnModFound(Mod mod)
     {
         ModItem modItem = Instantiate(modItemPrefab);
@@ -67,13 +67,13 @@ public class ModMenu : MonoBehaviour
     {
         ModItem modItem;
 
-        if(modItems.TryGetValue(mod, out modItem))
+        if (modItems.TryGetValue(mod, out modItem))
         {
             modItems.Remove(mod);
             Destroy(modItem.gameObject);
         }
     }
-        
+
     private void SetTogglesInteractable(bool interactable)
     {
         foreach (ModItem item in modItems.Values)
@@ -102,7 +102,7 @@ public class ModMenu : MonoBehaviour
         //load mods
         foreach (Mod mod in modItems.Keys)
         {
-            if(mod.isEnabled)
+            if (mod.isEnabled)
                 mod.LoadAsync();
         }
 
@@ -111,11 +111,11 @@ public class ModMenu : MonoBehaviour
         loadButton.GetComponentInChildren<Text>().text = "U N L O A D";
 
         isLoaded = true;
-        DefaultLight.enabled = false;
+
     }
 
     private void Unload()
-    {   
+    {
         //unload all mods - this will unload their scenes and destroy all their instantiated objects as well
         foreach (Mod mod in modItems.Keys)
         {
@@ -129,7 +129,7 @@ public class ModMenu : MonoBehaviour
         isLoaded = false;
         DefaultLight.enabled = true;
     }
-    
+
     private void OnModLoaded(Mod mod)
     {
         Debug.Log("Loaded Mod: " + mod.name);
@@ -138,6 +138,7 @@ public class ModMenu : MonoBehaviour
         ModScene scene = mod.scenes.FirstOrDefault();
         if (scene != null)
             scene.LoadAsync();
+        DefaultLight.enabled = false;
     }
 
     private void OnModUnloaded(Mod mod)
