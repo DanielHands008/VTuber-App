@@ -2134,14 +2134,31 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Space: Hide UI
+  m_Text: 'Right Mouse Button: Rotate camera.
+
+    WASD: Move camera.
+
+    Shift:
+    Increase camera speed.
+
+    Ctrl + WASD: Move camera only on X and Z axis.
+
+    Mouse
+    Wheel: Move camera up or down.
+
+    CTRL + Mouse Wheel: Zoom camera.
+
+    Space:
+    Hide UI
 
     TAB, 1-6: Change Camera
 
-    CTRL + 1 - 6: Set camera
-    position.
+    CTRL + 1 - 6: Set camera position.
 
-    H: Hide world.
+    H:
+    Hide world.
+
+    Alt: Rotate VModel.
 
     (Cardinal) Ctrl: Move VModel on Z axis.
 
@@ -2149,9 +2166,7 @@ MonoBehaviour:
     Shift: Move VModel on X axis.
 
     (Cardinal) Ctrl + Shift: Move VModel on Y
-    axis (Height).
-
-    Alt: Rotate VModel.'
+    axis (Height).'
 --- !u!1001 &938579719072825884
 PrefabInstance:
   m_ObjectHideFlags: 0
