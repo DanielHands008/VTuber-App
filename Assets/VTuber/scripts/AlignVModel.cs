@@ -5,6 +5,7 @@ using UnityEngine;
 public class AlignVModel : MonoBehaviour
 {
     public SettingsManager SettingsManager;
+    public UI UI;
     public string settingsFile = "vmodel";
     public Camera MainCamera;
     public float dragSensitivity = 1f;
@@ -18,7 +19,7 @@ public class AlignVModel : MonoBehaviour
     int moveY = 1;
     bool rotateVmodel = false;
     private bool dragEnabled = false;
-    public int dragType = 0; // "Cardinal" "Screen Space" "Height Locked"
+    public int dragType = 0; // "Screen Space" "Cardinal" "Height Locked"
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
@@ -40,9 +41,30 @@ public class AlignVModel : MonoBehaviour
     }
     void Update()
     {
+        dragSensitivity = UI.sliderValues[0];
         if (MainCamera.enabled)
         {
             if (dragType == 0)
+            {
+                if (dragEnabled)
+                {
+                    mouseLocation = Input.mousePosition - mouseLocation;
+                    if (rotateVmodel)
+                    {
+                        mouseLocation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + Input.GetAxis(mouseHorizontalAxisName), transform.eulerAngles.z);
+                        transform.eulerAngles = mouseLocation;
+                    }
+                    else
+                        transform.Translate(Input.GetAxis(mouseHorizontalAxisName) * dragSensitivity, Input.GetAxis(mouseVerticalAxisName) * dragSensitivity, 0, Camera.main.transform);
+                }
+                if (Input.GetMouseButtonDown(2))
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    mouseLocation = Input.mousePosition;
+                    dragEnabled = true;
+                }
+            }
+            else if (dragType == 1)
             {
                 if (dragEnabled)
                 {
@@ -64,21 +86,6 @@ public class AlignVModel : MonoBehaviour
                     }
                     mouseLocation = Input.mousePosition;
                 }
-
-                if (Input.GetKeyDown(KeyCode.LeftShift))
-                    moveY = 0;
-                if (Input.GetKeyUp(KeyCode.LeftShift))
-                    moveY = 1;
-
-                if (Input.GetKeyDown(KeyCode.LeftControl))
-                    moveX = 0;
-                if (Input.GetKeyUp(KeyCode.LeftControl))
-                    moveX = 1;
-
-                if (Input.GetKeyDown(KeyCode.LeftAlt))
-                    rotateVmodel = true;
-                if (Input.GetKeyUp(KeyCode.LeftAlt))
-                    rotateVmodel = false;
 
                 if (Input.GetMouseButtonDown(2))
                 {
@@ -120,6 +127,20 @@ public class AlignVModel : MonoBehaviour
                     dragEnabled = true;
                 }
             }
+                            if (Input.GetKeyDown(KeyCode.LeftShift))
+                    moveY = 0;
+                if (Input.GetKeyUp(KeyCode.LeftShift))
+                    moveY = 1;
+
+                if (Input.GetKeyDown(KeyCode.LeftControl))
+                    moveX = 0;
+                if (Input.GetKeyUp(KeyCode.LeftControl))
+                    moveX = 1;
+
+                if (Input.GetKeyDown(KeyCode.LeftAlt))
+                    rotateVmodel = true;
+                if (Input.GetKeyUp(KeyCode.LeftAlt))
+                    rotateVmodel = false;
         }
         if (Input.GetMouseButtonUp(2))
         {
@@ -224,15 +245,18 @@ public class AlignVModel : MonoBehaviour
     public void nextDragType()
     {
         dragType++;
-        if (dragType == 3)
+        if (dragType == 2)
             dragType = 0;
     }
     public string dragTypeString()
     {
         if (dragType == 0)
+            return "Screen Space";
+        else if (dragType == 1)
             return "Cardinal";
         else if (dragType == 1)
-            return "Screen Space";
-        else return "Height Locked";
+            return "Height Locked";
+        else
+            return dragType.ToString();
     }
 }
