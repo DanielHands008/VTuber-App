@@ -21,10 +21,15 @@ public class UI : MonoBehaviour
     private string[][] menus = new string[][]
     {
     new string[] { "Save Positions", "Reload Positions", "Reset Dynamic Camera" },
-    new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Reset Position" },
+    new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Slider|0|Sensitivity", "Reset Position" },
     new string[] { "Graphics Settings", "Toggle Mod Loader", "Controls", "Help" }
     };
+    public float[] sliderValues = { 0.1f };
+    public float[] slidersMin = { 0.01f };
+    public float[] slidersMax = { 1f };
     public static bool showUI = true;
+    bool manualHideUI = false;
+    bool wasModloaderActive = true;
     bool showSaveVmodalPresets = false;
     bool showLoadVmodalPresets = false;
     bool showLoadVmodels = false;
@@ -63,7 +68,7 @@ public class UI : MonoBehaviour
                 }
                 showLoadVmodels = !showLoadVmodels;
             }
-            if (item == 3)
+            if (buttonName.StartsWith("Drag Type:"))
             {
                 AlignVModel.nextDragType();
                 menus[1][3] = "Drag Type: " + AlignVModel.dragTypeString();
@@ -117,6 +122,18 @@ public class UI : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (!manualHideUI)
+            {
+                wasModloaderActive = modLoader.activeSelf;
+                if (wasModloaderActive)
+                    modLoader.SetActive(false);
+            }
+            else if (wasModloaderActive)
+                modLoader.SetActive(true);
+            manualHideUI = !manualHideUI;
+        }
     }
 
     void OnGUI()
@@ -138,22 +155,22 @@ public class UI : MonoBehaviour
             Application.targetFrameRate = maxFPS;
         }
 
-        if (showUI)
+        if (showUI && !manualHideUI)
             for (int i = 0; i < menus.Length; i++)
             {
                 menuWindows[i] = GUI.Window(i, menuWindows[i], MenuButtons, menusNames[i]);
 
             }
 
-        if (showUI && showSaveVmodalPresets)
+        if (showUI && showSaveVmodalPresets && !manualHideUI)
             saveVmodelPresets = GUI.Window(menus.Length + 1, saveVmodelPresets, saveVmodelPresetsButtons, "Save Vmodel Preset");
-        if (showUI && showLoadVmodalPresets)
+        if (showUI && showLoadVmodalPresets && !manualHideUI)
             loadVmodelPresets = GUI.Window(menus.Length + 2, loadVmodelPresets, loadVmodelPresetsButtons, "Load Vmodel Preset");
 
-        if (showUI && showLoadVmodels)
+        if (showUI && showLoadVmodels && !manualHideUI)
             loadVmodel = GUI.Window(menus.Length + 3, loadVmodel, loadVmodelButtons, "Load Model");
 
-        if (showUI && showGraphicsSettings)
+        if (showUI && showGraphicsSettings && !manualHideUI)
             graphicsSettings = GUI.Window(menus.Length + 4, graphicsSettings, graphicsSettingsButtons, "Graphics Settings");
     }
 
@@ -162,6 +179,13 @@ public class UI : MonoBehaviour
     {
         for (int i = 0; i < menus[windowID].Length; i++)
         {
+            if (menus[windowID][i].StartsWith("Slider|"))
+            {
+                string[] parts = menus[windowID][i].Split('|');
+                GUI.Label(new Rect(10, 20 + (20 * i), MenuWidth / 2, 20), parts[2]);
+                sliderValues[int.Parse(parts[1])] = GUI.HorizontalSlider(new Rect(10 + MenuWidth / 2, 25 + (20 * i), MenuWidth / 2, 20), sliderValues[int.Parse(parts[1])], slidersMin[int.Parse(parts[1])], slidersMax[int.Parse(parts[1])]);
+            }
+            else
             if (GUI.Button(new Rect(10, 20 + (20 * i), MenuWidth, 20), menus[windowID][i]))
             {
                 MenuItemClicked(windowID, i);
@@ -259,7 +283,7 @@ public class UI : MonoBehaviour
     public void toggleHelp(bool value)
     {
         showHelp = value;
-        helpCanvas.GetComponent<Canvas>().enabled = showHelp; 
+        helpCanvas.GetComponent<Canvas>().enabled = showHelp;
     }
 
 }
