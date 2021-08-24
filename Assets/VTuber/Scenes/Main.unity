@@ -123,6 +123,23 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1271976127 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8333732472400507026, guid: 8e37a0b7de1699f49a873fefab2d1286, type: 3}
+  m_PrefabInstance: {fileID: 3457615982318949744}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1271976132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271976127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f630e18edd79ce345abfbb828cdd1489, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!850595691 &1816717217
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -250,6 +267,14 @@ PrefabInstance:
     - target: {fileID: 2310739060151302640, guid: 8e37a0b7de1699f49a873fefab2d1286, type: 3}
       propertyPath: m_LocalPosition.z
       value: -1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8333732472784787189, guid: 8e37a0b7de1699f49a873fefab2d1286, type: 3}
+      propertyPath: TargetFPS
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8333732472784787189, guid: 8e37a0b7de1699f49a873fefab2d1286, type: 3}
+      propertyPath: VsyncSettings
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3457615983494687227, guid: 8e37a0b7de1699f49a873fefab2d1286, type: 3}

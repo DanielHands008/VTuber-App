@@ -13,20 +13,23 @@ public class UI : MonoBehaviour
     public AlignVModel AlignVModel;
     public ExternalReceiver ExternalReceiver;
     GameObject modLoader;
-
+    bool enableVsync = true;
+    string maxFPSString = "60";
+    int maxFPS = -1;
     private string[] menusNames = { "Camera Settings", "VModel", "More" };
     private string[][] menus = new string[][]
     {
     new string[] { "Save Positions", "Reload Positions", "Reset Dynamic Camera" },
     new string[] { "Save Preset", "Load Preset", "Load Model", "Reset Position" },
-    new string[] { "Toggle Mod Loader", "Help" }
+    new string[] { "Graphics Settings", "Toggle Mod Loader", "Help" }
     };
     public static bool showUI = true;
     bool showSaveVmodalPresets = false;
     bool showLoadVmodalPresets = false;
     bool showLoadVmodels = false;
     bool showModLoader = true;
-    bool caneraUnhidesModLoader = true;
+    bool cameraUnhidesModLoader = true;
+    bool showGraphicsSettings = false;
     string[] modelPaths;
     int saveAndLoadTopOffset = 85;
     void MenuItemClicked(int menu, int item)
@@ -65,9 +68,13 @@ public class UI : MonoBehaviour
 
         if (menuName == "More")
         {
+            if (buttonName == "Graphics Settings")
+            {
+                showGraphicsSettings = !showGraphicsSettings;
+            }
             if (buttonName == "Toggle Mod Loader")
             {
-                caneraUnhidesModLoader = !caneraUnhidesModLoader;
+                cameraUnhidesModLoader = !cameraUnhidesModLoader;
                 toggleModloader(!showModLoader);
             }
             if (buttonName == "Help")
@@ -81,6 +88,7 @@ public class UI : MonoBehaviour
     Rect saveVmodelPresets;
     Rect loadVmodelPresets;
     Rect loadVmodel;
+    Rect graphicsSettings;
     void Start()
     {
         modLoader = GameObject.Find("ModLoader");
@@ -94,6 +102,8 @@ public class UI : MonoBehaviour
 
         saveVmodelPresets = new Rect(50 + MenuWidth, 40 + saveAndLoadTopOffset, 150, 50);
         loadVmodelPresets = new Rect(50 + MenuWidth, 100 + saveAndLoadTopOffset, 150, 50);
+
+        graphicsSettings = new Rect(50 + MenuWidth, 160 + saveAndLoadTopOffset, MenuWidth + 20, 80);
     }
 
     void Update()
@@ -102,6 +112,23 @@ public class UI : MonoBehaviour
 
     void OnGUI()
     {
+        // Set Vsync options.
+        if (enableVsync)
+            QualitySettings.vSyncCount = 1;
+        else
+            QualitySettings.vSyncCount = 0;
+
+        // Set Max FPS
+        int newFPS = 0;
+        bool result = int.TryParse(maxFPSString, out newFPS);
+        if (newFPS != 0 && newFPS < 30) newFPS = 30;
+        if (newFPS != maxFPS)
+        {
+            maxFPS = newFPS;
+            maxFPSString = maxFPS.ToString();
+            Application.targetFrameRate = maxFPS;
+        }
+
         if (showUI)
             for (int i = 0; i < menus.Length; i++)
             {
@@ -116,6 +143,9 @@ public class UI : MonoBehaviour
 
         if (showUI && showLoadVmodels)
             loadVmodel = GUI.Window(menus.Length + 3, loadVmodel, loadVmodelButtons, "Load Model");
+
+        if (showUI && showGraphicsSettings)
+            graphicsSettings = GUI.Window(menus.Length + 4, graphicsSettings, graphicsSettingsButtons, "Graphics Settings");
     }
 
 
@@ -179,6 +209,16 @@ public class UI : MonoBehaviour
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 
+    void graphicsSettingsButtons(int windowID)
+    {
+        enableVsync = GUI.Toggle(new Rect(10, 20, MenuWidth, 20), enableVsync, " Enable VSync");
+        
+        GUI.Label(new Rect(10, 40, 100, 20), "Max FPS");
+        if (!enableVsync) maxFPSString = GUI.TextField(new Rect(70, 40, MenuWidth - 60, 20), maxFPSString, 3);
+
+        GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+    }
+
     public void ShowUI(bool value)
     {
         showUI = value;
@@ -188,7 +228,7 @@ public class UI : MonoBehaviour
     public void ShowUI(bool value, bool fromCamera)
     {
         showUI = value;
-        if (!fromCamera || caneraUnhidesModLoader)
+        if (!fromCamera || cameraUnhidesModLoader)
             toggleModloader(value);
 
     }

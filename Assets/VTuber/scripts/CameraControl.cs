@@ -9,8 +9,6 @@ public class CameraControl : MonoBehaviour
     public SettingsManager SettingsManager;
     public string settingsFile = "cameras";
 
-
-    public int TargetFPS = 60;
     public Camera MainCamera;
     public Camera FixedCamear1;
     public Camera FixedCamear2;
@@ -74,7 +72,6 @@ public class CameraControl : MonoBehaviour
         CameraExtensions.LayerCullingHide(FixedCamear4, "Hidden To Fixed Cameras");
         CameraExtensions.LayerCullingHide(FixedCamear5, "Hidden To Fixed Cameras");
         CameraExtensions.LayerCullingHide(FixedCamear6, "Hidden To Fixed Cameras");
-        Application.targetFrameRate = TargetFPS;
         loadCamerasFromFile();
     }
 
