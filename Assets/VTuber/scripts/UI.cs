@@ -13,6 +13,7 @@ public class UI : MonoBehaviour
     public AlignVModel AlignVModel;
     public ExternalReceiver ExternalReceiver;
     GameObject modLoader;
+    GameObject helpCanvas;
     bool enableVsync = true;
     string maxFPSString = "60";
     int maxFPS = -1;
@@ -20,8 +21,8 @@ public class UI : MonoBehaviour
     private string[][] menus = new string[][]
     {
     new string[] { "Save Positions", "Reload Positions", "Reset Dynamic Camera" },
-    new string[] { "Save Preset", "Load Preset", "Load Model", "Reset Position" },
-    new string[] { "Graphics Settings", "Toggle Mod Loader", "Help" }
+    new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Reset Position" },
+    new string[] { "Graphics Settings", "Toggle Mod Loader", "Controls", "Help" }
     };
     public static bool showUI = true;
     bool showSaveVmodalPresets = false;
@@ -29,6 +30,7 @@ public class UI : MonoBehaviour
     bool showLoadVmodels = false;
     bool showModLoader = true;
     bool cameraUnhidesModLoader = true;
+    bool showHelp = false;
     bool showGraphicsSettings = false;
     string[] modelPaths;
     int saveAndLoadTopOffset = 85;
@@ -46,13 +48,13 @@ public class UI : MonoBehaviour
             if (item == 2) // Reset Dynamic Camera
                 MainCamera.resetPosition();
         }
-        if (menu == 1) // VModel
+        if (menuName == "VModel")
         {
-            if (item == 0) // Save Preset
+            if (buttonName == "Save Preset") // Save Preset
                 showSaveVmodalPresets = !showSaveVmodalPresets;
-            if (item == 1) // Load Preset
+            if (buttonName == "Load Preset") // Load Preset
                 showLoadVmodalPresets = !showLoadVmodalPresets;
-            if (item == 2) // Load Model
+            if (buttonName == "Load Model") // Load Model
             {
                 if (!showLoadVmodels)
                 {
@@ -61,8 +63,12 @@ public class UI : MonoBehaviour
                 }
                 showLoadVmodels = !showLoadVmodels;
             }
-
-            if (item == 3) // Reset Position
+            if (item == 3)
+            {
+                AlignVModel.nextDragType();
+                menus[1][3] = "Drag Type: " + AlignVModel.dragTypeString();
+            }
+            if (buttonName == "Reset Position") // Reset Position
                 AlignVModel.resetPosition();
         }
 
@@ -77,9 +83,9 @@ public class UI : MonoBehaviour
                 cameraUnhidesModLoader = !cameraUnhidesModLoader;
                 toggleModloader(!showModLoader);
             }
-            if (buttonName == "Help")
+            if (buttonName == "Controls")
             {
-
+                toggleHelp();
             }
         }
     }
@@ -91,7 +97,10 @@ public class UI : MonoBehaviour
     Rect graphicsSettings;
     void Start()
     {
+        menus[1][3] = "Drag Type: " + AlignVModel.dragTypeString();
         modLoader = GameObject.Find("ModLoader");
+        helpCanvas = GameObject.Find("Help");
+        helpCanvas.GetComponent<Canvas>().enabled = false;
         menuWindows = new Rect[menus.Length];
         int lastHeight = 0;
         for (int i = 0; i < menus.Length; i++)
@@ -212,7 +221,7 @@ public class UI : MonoBehaviour
     void graphicsSettingsButtons(int windowID)
     {
         enableVsync = GUI.Toggle(new Rect(10, 20, MenuWidth, 20), enableVsync, " Enable VSync");
-        
+
         GUI.Label(new Rect(10, 40, 100, 20), "Max FPS");
         if (!enableVsync) maxFPSString = GUI.TextField(new Rect(70, 40, MenuWidth - 60, 20), maxFPSString, 3);
 
@@ -241,6 +250,16 @@ public class UI : MonoBehaviour
     {
         showModLoader = value;
         modLoader.SetActive(showModLoader);
+    }
+
+    public void toggleHelp()
+    {
+        toggleHelp(!showHelp);
+    }
+    public void toggleHelp(bool value)
+    {
+        showHelp = value;
+        helpCanvas.GetComponent<Canvas>().enabled = showHelp; 
     }
 
 }

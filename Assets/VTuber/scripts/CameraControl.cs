@@ -17,6 +17,8 @@ public class CameraControl : MonoBehaviour
     public Camera FixedCamear5;
     public Camera FixedCamear6;
 
+    GameObject UIContainer;
+
     bool hideWorld = false;
 
     public class CameraData
@@ -66,6 +68,7 @@ public class CameraControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UIContainer = GameObject.Find("UIContainer");
         CameraExtensions.LayerCullingHide(FixedCamear1, "Hidden To Fixed Cameras");
         CameraExtensions.LayerCullingHide(FixedCamear2, "Hidden To Fixed Cameras");
         CameraExtensions.LayerCullingHide(FixedCamear3, "Hidden To Fixed Cameras");
@@ -179,9 +182,16 @@ public class CameraControl : MonoBehaviour
         // Change to switch case
 
         if (cameraNumber != 0)
+        {
             WindowScripts.ShowUI(false, true);
+            UIContainer.SetActive(false);
+        }
         else
+        {
             WindowScripts.ShowUI(true, true);
+            UIContainer.SetActive(true);
+
+        }
     }
 
     void setCamera(int cameraNumber)

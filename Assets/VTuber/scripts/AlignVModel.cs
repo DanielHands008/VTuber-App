@@ -18,6 +18,7 @@ public class AlignVModel : MonoBehaviour
     int moveY = 1;
     bool rotateVmodel = false;
     private bool dragEnabled = false;
+    public int dragType = 0; // "Cardinal" "Screen Space" "Height Locked"
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
@@ -41,80 +42,83 @@ public class AlignVModel : MonoBehaviour
     {
         if (MainCamera.enabled)
         {
-            if (dragEnabled)
+            if (dragType == 0)
             {
-                mouseLocation = Input.mousePosition - mouseLocation;
-                if (rotateVmodel)
+                if (dragEnabled)
                 {
-                    mouseLocation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + Input.GetAxis(mouseHorizontalAxisName), transform.eulerAngles.z);
-                    transform.eulerAngles = mouseLocation;
-                }
-                else if (moveX == 0 && moveY == 0) // Move Y axis (up/down) if both ctrl and shift are press.
-                {
-                    mouseLocation = new Vector3(transform.position.x, transform.position.y + (Input.GetAxis(mouseVerticalAxisName) * dragSensitivity), transform.position.z);
-                    transform.position = mouseLocation;
-                }
-                else
-                {
-                    mouseLocation = new Vector3(transform.position.x + (((invertX * Input.GetAxis(xMoveAxis)) * dragSensitivity) * moveX), transform.position.y, transform.position.z + (((invertY * Input.GetAxis(yMoveAxis)) * dragSensitivity) * moveY));
-                    transform.position = mouseLocation;
-                }
-                mouseLocation = Input.mousePosition;
-            }
-
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-                moveY = 0;
-            if (Input.GetKeyUp(KeyCode.LeftShift))
-                moveY = 1;
-
-            if (Input.GetKeyDown(KeyCode.LeftControl))
-                moveX = 0;
-            if (Input.GetKeyUp(KeyCode.LeftControl))
-                moveX = 1;
-
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
-                rotateVmodel = true;
-            if (Input.GetKeyUp(KeyCode.LeftAlt))
-                rotateVmodel = false;
-
-            if (Input.GetMouseButtonDown(2))
-            {
-                int quad = (int)Mathf.Round((MainCamera.transform.eulerAngles.y) / 90);
-                if (quad == 4)
-                    quad = 0;
-
-                if (quad == 0)
-                {
-                    xMoveAxis = mouseHorizontalAxisName;
-                    yMoveAxis = mouseVerticalAxisName;
-                    invertX = 1;
-                    invertY = 1;
-                }
-                if (quad == 1)
-                {
-                    xMoveAxis = mouseVerticalAxisName;
-                    yMoveAxis = mouseHorizontalAxisName;
-                    invertX = 1;
-                    invertY = -1;
-                }
-                if (quad == 2)
-                {
-                    xMoveAxis = mouseHorizontalAxisName;
-                    yMoveAxis = mouseVerticalAxisName;
-                    invertX = -1;
-                    invertY = -1;
-                }
-                if (quad == 3)
-                {
-                    xMoveAxis = mouseVerticalAxisName;
-                    yMoveAxis = mouseHorizontalAxisName;
-                    invertX = -1;
-                    invertY = 1;
+                    mouseLocation = Input.mousePosition - mouseLocation;
+                    if (rotateVmodel)
+                    {
+                        mouseLocation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + Input.GetAxis(mouseHorizontalAxisName), transform.eulerAngles.z);
+                        transform.eulerAngles = mouseLocation;
+                    }
+                    else if (moveX == 0 && moveY == 0) // Move Y axis (up/down) if both ctrl and shift are press.
+                    {
+                        mouseLocation = new Vector3(transform.position.x, transform.position.y + (Input.GetAxis(mouseVerticalAxisName) * dragSensitivity), transform.position.z);
+                        transform.position = mouseLocation;
+                    }
+                    else
+                    {
+                        mouseLocation = new Vector3(transform.position.x + (((invertX * Input.GetAxis(xMoveAxis)) * dragSensitivity) * moveX), transform.position.y, transform.position.z + (((invertY * Input.GetAxis(yMoveAxis)) * dragSensitivity) * moveY));
+                        transform.position = mouseLocation;
+                    }
+                    mouseLocation = Input.mousePosition;
                 }
 
-                Cursor.lockState = CursorLockMode.Locked;
-                mouseLocation = Input.mousePosition;
-                dragEnabled = true;
+                if (Input.GetKeyDown(KeyCode.LeftShift))
+                    moveY = 0;
+                if (Input.GetKeyUp(KeyCode.LeftShift))
+                    moveY = 1;
+
+                if (Input.GetKeyDown(KeyCode.LeftControl))
+                    moveX = 0;
+                if (Input.GetKeyUp(KeyCode.LeftControl))
+                    moveX = 1;
+
+                if (Input.GetKeyDown(KeyCode.LeftAlt))
+                    rotateVmodel = true;
+                if (Input.GetKeyUp(KeyCode.LeftAlt))
+                    rotateVmodel = false;
+
+                if (Input.GetMouseButtonDown(2))
+                {
+                    int quad = (int)Mathf.Round((MainCamera.transform.eulerAngles.y) / 90);
+                    if (quad == 4)
+                        quad = 0;
+
+                    if (quad == 0)
+                    {
+                        xMoveAxis = mouseHorizontalAxisName;
+                        yMoveAxis = mouseVerticalAxisName;
+                        invertX = 1;
+                        invertY = 1;
+                    }
+                    if (quad == 1)
+                    {
+                        xMoveAxis = mouseVerticalAxisName;
+                        yMoveAxis = mouseHorizontalAxisName;
+                        invertX = 1;
+                        invertY = -1;
+                    }
+                    if (quad == 2)
+                    {
+                        xMoveAxis = mouseHorizontalAxisName;
+                        yMoveAxis = mouseVerticalAxisName;
+                        invertX = -1;
+                        invertY = -1;
+                    }
+                    if (quad == 3)
+                    {
+                        xMoveAxis = mouseVerticalAxisName;
+                        yMoveAxis = mouseHorizontalAxisName;
+                        invertX = -1;
+                        invertY = 1;
+                    }
+
+                    Cursor.lockState = CursorLockMode.Locked;
+                    mouseLocation = Input.mousePosition;
+                    dragEnabled = true;
+                }
             }
         }
         if (Input.GetMouseButtonUp(2))
@@ -212,5 +216,23 @@ public class AlignVModel : MonoBehaviour
     {
         transform.position = originalPosition;
         transform.rotation = originalRotation;
+    }
+    public void setDragType(int type)
+    {
+        dragType = type;
+    }
+    public void nextDragType()
+    {
+        dragType++;
+        if (dragType == 3)
+            dragType = 0;
+    }
+    public string dragTypeString()
+    {
+        if (dragType == 0)
+            return "Cardinal";
+        else if (dragType == 1)
+            return "Screen Space";
+        else return "Height Locked";
     }
 }
