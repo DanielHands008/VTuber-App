@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GlobalEvents : Singleton<GlobalEvents>
 {
-    public UnityEvent<string> EventsInput = new UnityEvent<string>();
+    public UnityEvent<string, bool> EventsInput = new UnityEvent<string, bool>();
     // Start is called before the first frame update
     void Start()
     {

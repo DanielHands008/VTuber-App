@@ -121,9 +121,9 @@ public class UI : MonoBehaviour
         GlobalEvents.Instance.EventsInput.AddListener(EventsInput);
     }
 
-    void EventsInput(string input)
+    void EventsInput(string input, bool keyDown)
     {
-        if (input == "UI_Toggle")
+        if (input == "UI_Toggle" && keyDown)
         {
             if (!manualHideUI)
             {
