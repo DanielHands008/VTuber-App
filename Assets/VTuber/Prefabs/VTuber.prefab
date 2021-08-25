@@ -1231,6 +1231,7 @@ GameObject:
   - component: {fileID: 5516828537366814000}
   - component: {fileID: 5516828537366813966}
   - component: {fileID: 5516828537366813967}
+  - component: {fileID: 3432909790430363410}
   m_Layer: 0
   m_Name: Window Scripts
   m_TagString: Untagged
@@ -1300,6 +1301,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsFolder: settings
+--- !u!114 &3432909790430363410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5516828537366814003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f213d647cca204d936531464e53f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UI_Toggle: 32
 --- !u!1 &5516828537451696217
 GameObject:
   m_ObjectHideFlags: 0
@@ -2149,7 +2163,7 @@ MonoBehaviour:
     CTRL + Mouse Wheel: Zoom camera.
 
     Space:
-    Hide UI
+    Toggle UI
 
     TAB, 1-6: Change Camera
 

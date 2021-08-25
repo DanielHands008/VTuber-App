@@ -113,16 +113,17 @@ public class UI : MonoBehaviour
             menuWindows[i] = new Rect(20, 40 + (20 * lastHeight) + (40 * i), MenuWidth + 20, 30 + (20 * menus[i].Length));
             lastHeight += menus[i].Length;
         }
-
         saveVmodelPresets = new Rect(50 + MenuWidth, 40 + saveAndLoadTopOffset, 150, 50);
         loadVmodelPresets = new Rect(50 + MenuWidth, 100 + saveAndLoadTopOffset, 150, 50);
 
         graphicsSettings = new Rect(50 + MenuWidth, 160 + saveAndLoadTopOffset, MenuWidth + 20, 80);
+
+        GlobalEvents.Instance.EventsInput.AddListener(EventsInput);
     }
 
-    void Update()
+    void EventsInput(string input)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (input == "UI_Toggle")
         {
             if (!manualHideUI)
             {
@@ -134,6 +135,10 @@ public class UI : MonoBehaviour
                 modLoader.SetActive(true);
             manualHideUI = !manualHideUI;
         }
+    }
+
+    void Update()
+    {
     }
 
     void OnGUI()
