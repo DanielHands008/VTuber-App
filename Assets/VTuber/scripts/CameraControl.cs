@@ -83,44 +83,37 @@ public class CameraControl : MonoBehaviour
     {
 
         // https://docs.unity3d.com/ScriptReference/KeyCode.html
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Alpha1))
-            setCamera(1);
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Alpha2))
-            setCamera(2);
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Alpha3))
-            setCamera(3);
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Alpha4))
-            setCamera(4);
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Alpha5))
-            setCamera(5);
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Alpha6))
-            setCamera(6);
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.Alpha7))
-            setCamera(7);
-
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKey(InputManager.Instance.Camera_SaveModifier))
+        {
+            if (Input.GetKeyDown(InputManager.Instance.Camera_Select1))
+                setCamera(1);
+            if (Input.GetKeyDown(InputManager.Instance.Camera_Select2))
+                setCamera(2);
+            if (Input.GetKeyDown(InputManager.Instance.Camera_Select3))
+                setCamera(3);
+            if (Input.GetKeyDown(InputManager.Instance.Camera_Select4))
+                setCamera(4);
+            if (Input.GetKeyDown(InputManager.Instance.Camera_Select5))
+                setCamera(5);
+            if (Input.GetKeyDown(InputManager.Instance.Camera_Select6))
+                setCamera(6);
+        }
+        if (Input.GetKeyDown(InputManager.Instance.Camera_Select1))
+            setActiveCamera(1);
+        if (Input.GetKeyDown(InputManager.Instance.Camera_Select2))
+            setActiveCamera(2);
+        if (Input.GetKeyDown(InputManager.Instance.Camera_Select3))
+            setActiveCamera(3);
+        if (Input.GetKeyDown(InputManager.Instance.Camera_Select4))
+            setActiveCamera(4);
+        if (Input.GetKeyDown(InputManager.Instance.Camera_Select5))
+            setActiveCamera(5);
+        if (Input.GetKeyDown(InputManager.Instance.Camera_Select6))
+            setActiveCamera(6);
+        if (Input.GetKeyDown(InputManager.Instance.Camera_SelectDynamic))
             setActiveCamera(0);
 
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Return))
-            saveCamerasToFile();
-
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.F1))
-            loadCamerasFromFile();
-
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Alpha1))
-            setActiveCamera(1);
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Alpha2))
-            setActiveCamera(2);
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Alpha3))
-            setActiveCamera(3);
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Alpha4))
-            setActiveCamera(4);
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Alpha5))
-            setActiveCamera(5);
-        if (!Input.GetKey(KeyCode.RightControl) && Input.GetKeyDown(KeyCode.Alpha6))
-            setActiveCamera(6);
-
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(InputManager.Instance.World_Toggle))
         {
             if (!hideWorld)
             {

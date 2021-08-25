@@ -163,7 +163,7 @@ public class InputManager : Singleton<InputManager>
         GlobalEvents.Instance.EventsInput.Invoke(input, state);
     }
 
-    public bool InputState(string input)
+    public bool GetInputState(string input)
     {
         if (inputStates.ContainsKey(input))
             return inputStates[input];

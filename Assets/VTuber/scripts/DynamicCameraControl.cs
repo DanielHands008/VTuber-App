@@ -99,7 +99,7 @@ public class DynamicCameraControl : MonoBehaviour
             //Keyboard controls
 
             Vector3 Cam = GetBaseInput();
-            if (InputManager.Instance.InputState("Move_Fast"))
+            if (Input.GetKey(InputManager.Instance.Move_Fast))
             {
                 totalSpeed += Time.deltaTime;
 
@@ -125,22 +125,22 @@ public class DynamicCameraControl : MonoBehaviour
 
             Vector3 newPosition = transform.position;
 
-            if (InputManager.Instance.InputState("Camera_RotateLeft"))
+            if (Input.GetKey(InputManager.Instance.Camera_RotateLeft))
             {
                 if (transform.eulerAngles.z < 30 || transform.eulerAngles.z > 329)
                     transform.Rotate(Vector3.forward, 1f);
             }
-            if (InputManager.Instance.InputState("Camera_RotateRight"))
+            if (Input.GetKey(InputManager.Instance.Camera_RotateRight))
             {
                 if (transform.eulerAngles.z < 31 || transform.eulerAngles.z > 330)
                     transform.Rotate(Vector3.forward, -1f);
             }
-            if (InputManager.Instance.InputState("Camera_RotateReset"))
+            if (Input.GetKey(InputManager.Instance.Camera_RotateReset))
             {
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, 0f);
             }
 
-            if (InputManager.Instance.InputState("Move_HeightLock"))
+            if (Input.GetKey(InputManager.Instance.Move_HeightLock))
             {
                 ctrlDown = true;
                 //If the player wants to move on X and Z axis only by pressing space (good for re-adjusting angle shots)

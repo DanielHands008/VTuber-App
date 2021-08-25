@@ -64,7 +64,7 @@ public class AlignVModel : MonoBehaviour
                     dragEnabled = true;
                 }
             }
-            else if (dragType == 1)
+            else if (dragType == 2)
             {
                 if (dragEnabled)
                 {
@@ -127,20 +127,46 @@ public class AlignVModel : MonoBehaviour
                     dragEnabled = true;
                 }
             }
-                            if (Input.GetKeyDown(KeyCode.LeftShift))
-                    moveY = 0;
-                if (Input.GetKeyUp(KeyCode.LeftShift))
-                    moveY = 1;
+            else if (dragType == 1)
+            {
+                if (dragEnabled)
+                {
+                    mouseLocation = Input.mousePosition - mouseLocation;
+                    if (rotateVmodel)
+                    {
+                        mouseLocation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + Input.GetAxis(mouseHorizontalAxisName), transform.eulerAngles.z);
+                        transform.eulerAngles = mouseLocation;
+                    }
+                    else
+                    {
+                        GameObject emptyGO = new GameObject();
+                        emptyGO.transform.position = Camera.main.transform.position;
+                        emptyGO.transform.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w);
+                        transform.Translate(Input.GetAxis(mouseHorizontalAxisName) * dragSensitivity, 0, Input.GetAxis(mouseVerticalAxisName) * dragSensitivity, emptyGO.transform);
+                        Destroy(emptyGO);
+                    }
+                }
+                if (Input.GetMouseButtonDown(2))
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    mouseLocation = Input.mousePosition;
+                    dragEnabled = true;
+                }
+            }
+            if (Input.GetKeyDown(InputManager.Instance.VModel_SnapXModifier))
+                moveY = 0;
+            if (Input.GetKeyUp(InputManager.Instance.VModel_SnapXModifier))
+                moveY = 1;
 
-                if (Input.GetKeyDown(KeyCode.LeftControl))
-                    moveX = 0;
-                if (Input.GetKeyUp(KeyCode.LeftControl))
-                    moveX = 1;
+            if (Input.GetKeyDown(InputManager.Instance.VModel_SnapZModifier))
+                moveX = 0;
+            if (Input.GetKeyUp(InputManager.Instance.VModel_SnapZModifier))
+                moveX = 1;
 
-                if (Input.GetKeyDown(KeyCode.LeftAlt))
-                    rotateVmodel = true;
-                if (Input.GetKeyUp(KeyCode.LeftAlt))
-                    rotateVmodel = false;
+            if (Input.GetKeyDown(InputManager.Instance.VModel_RotateModifier))
+                rotateVmodel = true;
+            if (Input.GetKeyUp(InputManager.Instance.VModel_RotateModifier))
+                rotateVmodel = false;
         }
         if (Input.GetMouseButtonUp(2))
         {
@@ -245,7 +271,7 @@ public class AlignVModel : MonoBehaviour
     public void nextDragType()
     {
         dragType++;
-        if (dragType == 2)
+        if (dragType == 3)
             dragType = 0;
     }
     public string dragTypeString()
@@ -253,9 +279,9 @@ public class AlignVModel : MonoBehaviour
         if (dragType == 0)
             return "Screen Space";
         else if (dragType == 1)
-            return "Cardinal";
-        else if (dragType == 1)
             return "Height Locked";
+        else if (dragType == 2)
+            return "Cardinal";
         else
             return dragType.ToString();
     }
