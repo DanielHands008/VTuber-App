@@ -9,8 +9,6 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 {
     // Start is called before the first frame update
     // https://github.com/Elringus/UnityRawInput
-
-    public SettingsManager SettingsManager;
     public string settingsFile = "hotkeys";
 
     public string rebindHotkey = "";
@@ -294,11 +292,11 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 
         string json = JsonUtility.ToJson(saveData);
         print(json);
-        SettingsManager.saveFile(settingsFile, json);
+        SettingsManager.Instance.saveFile(settingsFile, json);
     }
     public void loadHotkeys()
     {
-        string json = SettingsManager.loadFile(settingsFile);
+        string json = SettingsManager.Instance.loadFile(settingsFile);
         if (json == "") return;
         SaveData saveData = new SaveData();
         JsonUtility.FromJsonOverwrite(json, saveData);

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlignVModel : MonoBehaviour
+public class AlignVModel : Singleton<AlignVModel>
 {
-    public SettingsManager SettingsManager;
-    public UI UI;
     public string settingsFile = "vmodel";
     public Camera MainCamera;
     public float dragSensitivity = 1f;
@@ -41,7 +39,7 @@ public class AlignVModel : MonoBehaviour
     }
     void Update()
     {
-        dragSensitivity = UI.sliderValues[0];
+        dragSensitivity = UI.Instance.sliderValues[0];
         if (MainCamera.enabled)
         {
             if (dragType == 0)
@@ -228,7 +226,7 @@ public class AlignVModel : MonoBehaviour
 
     public void loadPosition()
     {
-        string json = SettingsManager.loadFile(settingsFile);
+        string json = SettingsManager.Instance.loadFile(settingsFile);
         if (json == "") return;
         SaveData saveData = new SaveData();
         JsonUtility.FromJsonOverwrite(json, saveData);
@@ -241,7 +239,7 @@ public class AlignVModel : MonoBehaviour
         vModelPresets[0] = new vModelData(transform);
         SaveData saveData = new SaveData(vModelPresets);
         string json = JsonUtility.ToJson(saveData);
-        SettingsManager.saveFile(settingsFile, json);
+        SettingsManager.Instance.saveFile(settingsFile, json);
     }
     void setVmodalPosition(vModelData vmodelData)
     {

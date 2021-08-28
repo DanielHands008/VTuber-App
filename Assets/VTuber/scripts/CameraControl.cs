@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraControl : MonoBehaviour
+public class CameraControl : Singleton<CameraControl>
 {
-
-    public UI WindowScripts;
-    public SettingsManager SettingsManager;
     public string settingsFile = "cameras";
 
     public Camera MainCamera;
@@ -176,12 +173,12 @@ public class CameraControl : MonoBehaviour
 
         if (cameraNumber != 0)
         {
-            WindowScripts.ShowUI(false, true);
+            UI.Instance.ShowUI(false, true);
             UIContainer.SetActive(false);
         }
         else
         {
-            WindowScripts.ShowUI(true, true);
+            UI.Instance.ShowUI(true, true);
             UIContainer.SetActive(true);
 
         }
@@ -237,11 +234,11 @@ public class CameraControl : MonoBehaviour
         // http://docs.unity3d.com/ScriptReference/JsonUtility.html
         CameraData myCamData = new CameraData(MainCamera, FixedCamear1, FixedCamear2, FixedCamear3, FixedCamear4, FixedCamear5, FixedCamear6);
         string json = JsonUtility.ToJson(myCamData);
-        SettingsManager.saveFile(settingsFile, json);
+        SettingsManager.Instance.saveFile(settingsFile, json);
     }
     public void loadCamerasFromFile()
     {
-        string json = SettingsManager.loadFile(settingsFile);
+        string json = SettingsManager.Instance.loadFile(settingsFile);
         if (json == "") return;
         CameraData myCamData = new CameraData();
         JsonUtility.FromJsonOverwrite(json, myCamData);

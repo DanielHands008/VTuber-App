@@ -5,12 +5,10 @@ using UnityEngine;
 using EVMC4U;
 
 
-public class UI : MonoBehaviour
+public class UI : Singleton<UI>
 {
     public int MenuWidth = 100;
-    public CameraControl CamerasContainer;
     public DynamicCameraControl MainCamera;
-    public AlignVModel AlignVModel;
     public ExternalReceiver ExternalReceiver;
     GameObject modLoader;
     GameObject helpCanvas;
@@ -47,9 +45,9 @@ public class UI : MonoBehaviour
         if (menu == 0) // Camera Settings
         {
             if (item == 0) // Save Positions
-                CamerasContainer.saveCamerasToFile();
+                CameraControl.Instance.saveCamerasToFile();
             if (item == 1) // Reload Positions
-                CamerasContainer.loadCamerasFromFile();
+                CameraControl.Instance.loadCamerasFromFile();
             if (item == 2) // Reset Dynamic Camera
                 MainCamera.resetPosition();
         }
@@ -70,11 +68,11 @@ public class UI : MonoBehaviour
             }
             if (buttonName.StartsWith("Drag Type:"))
             {
-                AlignVModel.nextDragType();
-                menus[1][3] = "Drag Type: " + AlignVModel.dragTypeString();
+                AlignVModel.Instance.nextDragType();
+                menus[1][3] = "Drag Type: " + AlignVModel.Instance.dragTypeString();
             }
             if (buttonName == "Reset Position") // Reset Position
-                AlignVModel.resetPosition();
+                AlignVModel.Instance.resetPosition();
         }
 
         if (menuName == "More")
@@ -102,7 +100,7 @@ public class UI : MonoBehaviour
     Rect graphicsSettings;
     void Start()
     {
-        menus[1][3] = "Drag Type: " + AlignVModel.dragTypeString();
+        menus[1][3] = "Drag Type: " + AlignVModel.Instance.dragTypeString();
         modLoader = GameObject.Find("ModLoader");
         helpCanvas = GameObject.Find("Help");
         helpCanvas.GetComponent<Canvas>().enabled = false;
@@ -209,34 +207,34 @@ public class UI : MonoBehaviour
     void saveVmodelPresetsButtons(int windowID)
     {
         if (GUI.Button(new Rect(10, 20, 20, 20), "1"))
-            AlignVModel.SaveVmodelPreset(1);
+            AlignVModel.Instance.SaveVmodelPreset(1);
         if (GUI.Button(new Rect(32, 20, 20, 20), "2"))
-            AlignVModel.SaveVmodelPreset(2);
+            AlignVModel.Instance.SaveVmodelPreset(2);
         if (GUI.Button(new Rect(54, 20, 20, 20), "3"))
-            AlignVModel.SaveVmodelPreset(3);
+            AlignVModel.Instance.SaveVmodelPreset(3);
         if (GUI.Button(new Rect(76, 20, 20, 20), "4"))
-            AlignVModel.SaveVmodelPreset(4);
+            AlignVModel.Instance.SaveVmodelPreset(4);
         if (GUI.Button(new Rect(98, 20, 20, 20), "5"))
-            AlignVModel.SaveVmodelPreset(5);
+            AlignVModel.Instance.SaveVmodelPreset(5);
         if (GUI.Button(new Rect(120, 20, 20, 20), "6"))
-            AlignVModel.SaveVmodelPreset(6);
+            AlignVModel.Instance.SaveVmodelPreset(6);
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 
     void loadVmodelPresetsButtons(int windowID)
     {
         if (GUI.Button(new Rect(10, 20, 20, 20), "1"))
-            AlignVModel.LoadVmodelPreset(1);
+            AlignVModel.Instance.LoadVmodelPreset(1);
         if (GUI.Button(new Rect(32, 20, 20, 20), "2"))
-            AlignVModel.LoadVmodelPreset(2);
+            AlignVModel.Instance.LoadVmodelPreset(2);
         if (GUI.Button(new Rect(54, 20, 20, 20), "3"))
-            AlignVModel.LoadVmodelPreset(3);
+            AlignVModel.Instance.LoadVmodelPreset(3);
         if (GUI.Button(new Rect(76, 20, 20, 20), "4"))
-            AlignVModel.LoadVmodelPreset(4);
+            AlignVModel.Instance.LoadVmodelPreset(4);
         if (GUI.Button(new Rect(98, 20, 20, 20), "5"))
-            AlignVModel.LoadVmodelPreset(5);
+            AlignVModel.Instance.LoadVmodelPreset(5);
         if (GUI.Button(new Rect(120, 20, 20, 20), "6"))
-            AlignVModel.LoadVmodelPreset(6);
+            AlignVModel.Instance.LoadVmodelPreset(6);
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 

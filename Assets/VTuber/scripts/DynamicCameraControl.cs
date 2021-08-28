@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class DynamicCameraControl : MonoBehaviour
 {
-    public CameraControl CameraControl;
     public float normalSpeed = 2.0f; //Normal movement speed
 
     public float shiftSpeed = 5.0f; //multiplies movement speed by how long shift is held down.
@@ -168,7 +167,7 @@ public class DynamicCameraControl : MonoBehaviour
             {
                 camEnabled = false;
                 Cursor.lockState = CursorLockMode.None;
-                CameraControl.saveCamerasToFile();
+                CameraControl.Instance.saveCamerasToFile();
             }
         }
     }
