@@ -73,6 +73,26 @@ public class CameraControl : Singleton<CameraControl>
         CameraExtensions.LayerCullingHide(FixedCamear5, "Hidden To Fixed Cameras");
         CameraExtensions.LayerCullingHide(FixedCamear6, "Hidden To Fixed Cameras");
         loadCamerasFromFile();
+
+        GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
+    }
+
+    void GlobalHotkeyEvent(string eventName)
+    {
+        if (eventName == "SetCamera1")
+            setActiveCamera(1);
+        else if (eventName == "SetCamera2")
+            setActiveCamera(2);
+        else if (eventName == "SetCamera3")
+            setActiveCamera(3);
+        else if (eventName == "SetCamera4")
+            setActiveCamera(4);
+        else if (eventName == "SetCamera5")
+            setActiveCamera(5);
+        else if (eventName == "SetCamera6")
+            setActiveCamera(6);
+        else if (eventName == "ToggleWorld")
+            ToggleWorld();
     }
 
     // Update is called once per frame
@@ -111,30 +131,33 @@ public class CameraControl : Singleton<CameraControl>
             setActiveCamera(0);
 
         if (Input.GetKeyDown(InputManager.Instance.World_Toggle))
-        {
-            if (!hideWorld)
-            {
-                CameraExtensions.LayerCullingHide(MainCamera, "World");
-                CameraExtensions.LayerCullingHide(FixedCamear1, "World");
-                CameraExtensions.LayerCullingHide(FixedCamear2, "World");
-                CameraExtensions.LayerCullingHide(FixedCamear3, "World");
-                CameraExtensions.LayerCullingHide(FixedCamear4, "World");
-                CameraExtensions.LayerCullingHide(FixedCamear5, "World");
-                CameraExtensions.LayerCullingHide(FixedCamear6, "World");
-            }
-            else
-            {
-                CameraExtensions.LayerCullingShow(MainCamera, "World");
-                CameraExtensions.LayerCullingShow(FixedCamear1, "World");
-                CameraExtensions.LayerCullingShow(FixedCamear2, "World");
-                CameraExtensions.LayerCullingShow(FixedCamear3, "World");
-                CameraExtensions.LayerCullingShow(FixedCamear4, "World");
-                CameraExtensions.LayerCullingShow(FixedCamear5, "World");
-                CameraExtensions.LayerCullingShow(FixedCamear6, "World");
-            }
-            hideWorld = !hideWorld;
-        }
+            ToggleWorld();
 
+    }
+
+    void ToggleWorld()
+    {
+        if (!hideWorld)
+        {
+            CameraExtensions.LayerCullingHide(MainCamera, "World");
+            CameraExtensions.LayerCullingHide(FixedCamear1, "World");
+            CameraExtensions.LayerCullingHide(FixedCamear2, "World");
+            CameraExtensions.LayerCullingHide(FixedCamear3, "World");
+            CameraExtensions.LayerCullingHide(FixedCamear4, "World");
+            CameraExtensions.LayerCullingHide(FixedCamear5, "World");
+            CameraExtensions.LayerCullingHide(FixedCamear6, "World");
+        }
+        else
+        {
+            CameraExtensions.LayerCullingShow(MainCamera, "World");
+            CameraExtensions.LayerCullingShow(FixedCamear1, "World");
+            CameraExtensions.LayerCullingShow(FixedCamear2, "World");
+            CameraExtensions.LayerCullingShow(FixedCamear3, "World");
+            CameraExtensions.LayerCullingShow(FixedCamear4, "World");
+            CameraExtensions.LayerCullingShow(FixedCamear5, "World");
+            CameraExtensions.LayerCullingShow(FixedCamear6, "World");
+        }
+        hideWorld = !hideWorld;
     }
 
 

@@ -116,8 +116,7 @@ public class UI : Singleton<UI>
 
         graphicsSettings = new Rect(50 + MenuWidth, 160 + saveAndLoadTopOffset, MenuWidth + 20, 80);
 
-        GlobalEvents.Instance.EventsSetUI.AddListener(SetUI);
-        GlobalEvents.Instance.EventsToggleUI.AddListener(ToggleUI);
+        GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
     }
 
     void Update()
@@ -128,6 +127,11 @@ public class UI : Singleton<UI>
         }
     }
 
+    void GlobalHotkeyEvent(string eventName)
+    {
+        if (eventName == "ToggleUI")
+            ToggleUI();
+    }
     void ToggleUI()
     {
         SetUI(manualHideUI);

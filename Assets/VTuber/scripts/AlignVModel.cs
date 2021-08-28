@@ -36,6 +36,22 @@ public class AlignVModel : Singleton<AlignVModel>
         vModelPresets[5] = new vModelData(transform);
         vModelPresets[6] = new vModelData(transform);
         loadPosition();
+        GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
+    }
+    void GlobalHotkeyEvent(string eventName)
+    {
+        if (eventName == "LoadVModelPreset1")
+            LoadVmodelPreset(1);
+        else if (eventName == "LoadVModelPreset2")
+            LoadVmodelPreset(2);
+        else if (eventName == "LoadVModelPreset3")
+            LoadVmodelPreset(3);
+        else if (eventName == "LoadVModelPreset4")
+            LoadVmodelPreset(4);
+        else if (eventName == "LoadVModelPreset5")
+            LoadVmodelPreset(5);
+        else if (eventName == "LoadVModelPreset6")
+            LoadVmodelPreset(6);
     }
     void Update()
     {

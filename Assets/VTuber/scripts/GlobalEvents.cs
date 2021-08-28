@@ -11,7 +11,7 @@ public class GlobalEvents : Singleton<GlobalEvents>
     public UnityEvent EventsToggleUI = new UnityEvent();
     public UnityEvent<bool> EventsSetUI = new UnityEvent<bool>();
     public UnityEvent<int> EventsLoadVModalPreset = new UnityEvent<int>();
-    public UnityEvent<int> EventsGlobal = new UnityEvent<int>();
+    public UnityEvent<string> EventsGlobalHotkeys = new UnityEvent<string>();
     // Start is called before the first frame update
     void Start()
     {

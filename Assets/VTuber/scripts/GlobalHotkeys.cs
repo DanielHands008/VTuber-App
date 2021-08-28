@@ -16,22 +16,6 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 
     public Hotkeys HotkeyList = new Hotkeys();
 
-    void Start()
-    {
-        var workInBackground = true;
-        RawKeyInput.Start(workInBackground);
-        RawKeyInput.OnKeyUp += HandleKeyUp;
-        RawKeyInput.OnKeyDown += HandleKeyDown;
-        HotkeyList.Set("ToggleUI", RawKey.U, new RawKey[] { RawKey.LeftControl });
-        print(HotkeyList.hotkeys[0].Action);
-        // saveHotkeys();
-        loadHotkeys();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
     RawKey[] modifierList = {
         RawKey.LeftControl,
         RawKey.LeftMenu,
@@ -42,6 +26,21 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
         RawKey.RightShift,
         RawKey.RightWindows
     };
+
+    void Start()
+    {
+        var workInBackground = true;
+        RawKeyInput.Start(workInBackground);
+        RawKeyInput.OnKeyUp += HandleKeyUp;
+        RawKeyInput.OnKeyDown += HandleKeyDown;
+        // HotkeyList.Set("ToggleUI", RawKey.U, new RawKey[] { RawKey.LeftControl });
+        loadHotkeys();
+    }
+
+    void Update()
+    {
+    }
+
     private void HandleKeyDown(RawKey key)
     {
         if (rebindHotkey != "")
@@ -62,72 +61,7 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
         }
 
         string action = HandleHotkey(key);
-        switch (action)
-        {
-            case "ToggleUI":
-                GlobalEvents.Instance.EventsToggleUI.Invoke();
-                break;
-
-            case "ToggleWorld":
-                GlobalEvents.Instance.EventsToggleWorld.Invoke();
-                break;
-
-            case "ChangeCamera0":
-                GlobalEvents.Instance.EventsChangeCamera.Invoke(0);
-                break;
-
-            case "ChangeCamera1":
-                GlobalEvents.Instance.EventsChangeCamera.Invoke(1);
-                break;
-
-            case "ChangeCamera2":
-                GlobalEvents.Instance.EventsChangeCamera.Invoke(2);
-                break;
-
-            case "ChangeCamera3":
-                GlobalEvents.Instance.EventsChangeCamera.Invoke(3);
-                break;
-
-            case "ChangeCamera4":
-                GlobalEvents.Instance.EventsChangeCamera.Invoke(4);
-                break;
-
-            case "ChangeCamera5":
-                GlobalEvents.Instance.EventsChangeCamera.Invoke(5);
-                break;
-
-            case "ChangeCamera6":
-                GlobalEvents.Instance.EventsChangeCamera.Invoke(6);
-                break;
-
-            case "EventsLoadVModalPreset1":
-                GlobalEvents.Instance.EventsLoadVModalPreset.Invoke(1);
-                break;
-
-            case "EventsLoadVModalPreset2":
-                GlobalEvents.Instance.EventsLoadVModalPreset.Invoke(2);
-                break;
-
-            case "EventsLoadVModalPreset3":
-                GlobalEvents.Instance.EventsLoadVModalPreset.Invoke(3);
-                break;
-
-            case "EventsLoadVModalPreset4":
-                GlobalEvents.Instance.EventsLoadVModalPreset.Invoke(4);
-                break;
-
-            case "EventsLoadVModalPreset5":
-                GlobalEvents.Instance.EventsLoadVModalPreset.Invoke(5);
-                break;
-
-            case "EventsLoadVModalPreset6":
-                GlobalEvents.Instance.EventsLoadVModalPreset.Invoke(6);
-                break;
-
-
-            default:
-                break;
-        }
+        if (action != "") GlobalEvents.Instance.EventsGlobalHotkeys.Invoke(action);
     }
 
     private void HandleKeyUp(RawKey key)
@@ -136,17 +70,23 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 
     private string HandleHotkey(RawKey key)
     {
+
         for (int i = 0; i < HotkeyList.hotkeys.Length; i++)
         {
             if (HotkeyList.hotkeys[i].Key == key)
             {
-                // FIX: Return false ("") if extra modifiers are down.
-                for (int j = 0; j < HotkeyList.hotkeys[i].Modifiers.Length; j++)
+                int modifierCount = 0;
+                for (int j = 0; j < modifierList.Length; j++)
                 {
-                    if (!RawKeyInput.IsKeyDown(HotkeyList.hotkeys[i].Modifiers[j]))
-                        return "";
+                    if (RawKeyInput.IsKeyDown(modifierList[j]))
+                    {
+                        if (Array.Exists(HotkeyList.hotkeys[i].Modifiers, element => element == modifierList[j]))
+                            modifierCount++;
+                        else modifierCount--;
+                    }
                 }
-                return HotkeyList.hotkeys[i].Action;
+                if (modifierCount == HotkeyList.hotkeys[i].Modifiers.Length)
+                    return HotkeyList.hotkeys[i].Action;
             }
         }
         return "";
