@@ -1232,6 +1232,7 @@ GameObject:
   - component: {fileID: 5516828537366813966}
   - component: {fileID: 5516828537366813967}
   - component: {fileID: 3432909790430363410}
+  - component: {fileID: 2558274654168197353}
   m_Layer: 0
   m_Name: Window Scripts
   m_TagString: Untagged
@@ -1336,6 +1337,20 @@ MonoBehaviour:
   VModel_RotateModifier: 308
   VModel_SnapZModifier: 306
   VModel_SnapXModifier: 304
+--- !u!114 &2558274654168197353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5516828537366814003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcd18b065bddc94498b55ac62a36ba96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SettingsManager: {fileID: 5516828537366813967}
+  settingsFile: hotkeys
 --- !u!1 &5516828537451696217
 GameObject:
   m_ObjectHideFlags: 0

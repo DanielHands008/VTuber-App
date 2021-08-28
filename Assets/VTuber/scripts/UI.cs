@@ -118,27 +118,34 @@ public class UI : MonoBehaviour
 
         graphicsSettings = new Rect(50 + MenuWidth, 160 + saveAndLoadTopOffset, MenuWidth + 20, 80);
 
-        GlobalEvents.Instance.EventsInput.AddListener(EventsInput);
-    }
-
-    void EventsInput(string input, bool keyDown)
-    {
-        if (input == "UI_Toggle" && keyDown)
-        {
-            if (!manualHideUI)
-            {
-                wasModloaderActive = modLoader.activeSelf;
-                if (wasModloaderActive)
-                    modLoader.SetActive(false);
-            }
-            else if (wasModloaderActive)
-                modLoader.SetActive(true);
-            manualHideUI = !manualHideUI;
-        }
+        GlobalEvents.Instance.EventsSetUI.AddListener(SetUI);
+        GlobalEvents.Instance.EventsToggleUI.AddListener(ToggleUI);
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(InputManager.Instance.UI_Toggle))
+        {
+            ToggleUI();
+        }
+    }
+
+    void ToggleUI()
+    {
+        SetUI(manualHideUI);
+    }
+    void SetUI(bool value)
+    {
+        // Fix: modloader not staying hidden bug.
+        if (!value)
+        {
+            wasModloaderActive = modLoader.activeSelf;
+            if (wasModloaderActive)
+                modLoader.SetActive(false);
+        }
+        else if (wasModloaderActive)
+            modLoader.SetActive(true);
+        manualHideUI = !value;
     }
 
     void OnGUI()

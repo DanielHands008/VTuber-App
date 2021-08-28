@@ -64,6 +64,32 @@ public class AlignVModel : MonoBehaviour
                     dragEnabled = true;
                 }
             }
+            else if (dragType == 1)
+            {
+                if (dragEnabled)
+                {
+                    mouseLocation = Input.mousePosition - mouseLocation;
+                    if (rotateVmodel)
+                    {
+                        mouseLocation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + Input.GetAxis(mouseHorizontalAxisName), transform.eulerAngles.z);
+                        transform.eulerAngles = mouseLocation;
+                    }
+                    else
+                    {
+                        GameObject emptyGO = new GameObject();
+                        emptyGO.transform.position = Camera.main.transform.position;
+                        emptyGO.transform.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w);
+                        transform.Translate(Input.GetAxis(mouseHorizontalAxisName) * dragSensitivity, 0, Input.GetAxis(mouseVerticalAxisName) * dragSensitivity, emptyGO.transform);
+                        Destroy(emptyGO);
+                    }
+                }
+                if (Input.GetMouseButtonDown(2))
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    mouseLocation = Input.mousePosition;
+                    dragEnabled = true;
+                }
+            }
             else if (dragType == 2)
             {
                 if (dragEnabled)
@@ -122,32 +148,6 @@ public class AlignVModel : MonoBehaviour
                         invertY = 1;
                     }
 
-                    Cursor.lockState = CursorLockMode.Locked;
-                    mouseLocation = Input.mousePosition;
-                    dragEnabled = true;
-                }
-            }
-            else if (dragType == 1)
-            {
-                if (dragEnabled)
-                {
-                    mouseLocation = Input.mousePosition - mouseLocation;
-                    if (rotateVmodel)
-                    {
-                        mouseLocation = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + Input.GetAxis(mouseHorizontalAxisName), transform.eulerAngles.z);
-                        transform.eulerAngles = mouseLocation;
-                    }
-                    else
-                    {
-                        GameObject emptyGO = new GameObject();
-                        emptyGO.transform.position = Camera.main.transform.position;
-                        emptyGO.transform.rotation = new Quaternion(0, Camera.main.transform.rotation.y, 0, Camera.main.transform.rotation.w);
-                        transform.Translate(Input.GetAxis(mouseHorizontalAxisName) * dragSensitivity, 0, Input.GetAxis(mouseVerticalAxisName) * dragSensitivity, emptyGO.transform);
-                        Destroy(emptyGO);
-                    }
-                }
-                if (Input.GetMouseButtonDown(2))
-                {
                     Cursor.lockState = CursorLockMode.Locked;
                     mouseLocation = Input.mousePosition;
                     dragEnabled = true;
