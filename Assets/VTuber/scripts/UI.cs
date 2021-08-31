@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
 using UnityEngine;
 using EVMC4U;
+using uOSC;
 
 
 public class UI : Singleton<UI>
@@ -12,20 +14,22 @@ public class UI : Singleton<UI>
     public ExternalReceiver ExternalReceiver;
     GameObject modLoader;
     GameObject helpCanvas;
+    uOscServer uOscServer;
     bool enableVsync = true;
     string maxFPSString = "60";
     int maxFPS = -1;
     private string[] menusNames = { "Camera Settings", "VModel", "More" };
     private string[][] menus = new string[][]
     {
-    new string[] { "Save Positions", "Reload Positions", "Reset Dynamic Camera" },
+    new string[] { "Save Positions", "Reload Positions", "Slider|1|Sensitivity", "Reset Dynamic Camera" },
     new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Slider|0|Sensitivity", "Reset Position" },
-    new string[] { "Graphics Settings", "Toggle Mod Loader", "Controls", "Help" }
+    new string[] { "Settings", "Graphics Settings", "Toggle Mod Loader", "Controls", "Help" }
     };
-    public float[] sliderValues = { 0.1f };
-    public float[] slidersMin = { 0.01f };
-    public float[] slidersMax = { 1f };
+    public float[] sliderValues = { 0.1f, 1f };
+    public float[] slidersMin = { 0.01f, 0.5f };
+    public float[] slidersMax = { 1f, 3f };
     public static bool showUI = true;
+    public string VMCPort = "";
     bool manualHideUI = false;
     bool wasModloaderActive = true;
     bool showSaveVmodalPresets = false;
@@ -34,6 +38,7 @@ public class UI : Singleton<UI>
     bool showModLoader = true;
     bool cameraUnhidesModLoader = true;
     bool showHelp = false;
+    bool showSettings = false;
     bool showGraphicsSettings = false;
     string[] modelPaths;
     int saveAndLoadTopOffset = 85;
@@ -77,6 +82,10 @@ public class UI : Singleton<UI>
 
         if (menuName == "More")
         {
+            if (buttonName == "Settings")
+            {
+                showSettings = !showSettings;
+            }
             if (buttonName == "Graphics Settings")
             {
                 showGraphicsSettings = !showGraphicsSettings;
@@ -97,13 +106,19 @@ public class UI : Singleton<UI>
     Rect saveVmodelPresets;
     Rect loadVmodelPresets;
     Rect loadVmodel;
+    Rect settings;
     Rect graphicsSettings;
     void Start()
     {
-        menus[1][3] = "Drag Type: " + AlignVModel.Instance.dragTypeString();
         modLoader = GameObject.Find("ModLoader");
         helpCanvas = GameObject.Find("Help");
+        uOscServer = GameObject.Find("ExternalReceiver").GetComponent<uOscServer>();
         helpCanvas.GetComponent<Canvas>().enabled = false;
+        VMCPort = uOscServer.port.ToString();
+
+        LoadSettings();
+        menus[1][3] = "Drag Type: " + AlignVModel.Instance.dragTypeString();
+
         menuWindows = new Rect[menus.Length];
         int lastHeight = 0;
         for (int i = 0; i < menus.Length; i++)
@@ -115,12 +130,20 @@ public class UI : Singleton<UI>
         loadVmodelPresets = new Rect(50 + MenuWidth, 100 + saveAndLoadTopOffset, 150, 50);
 
         graphicsSettings = new Rect(50 + MenuWidth, 160 + saveAndLoadTopOffset, MenuWidth + 20, 80);
+        settings = new Rect(50 + MenuWidth, 250 + saveAndLoadTopOffset, MenuWidth + 20, 80);
 
         GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
     }
 
     void Update()
     {
+        if (Int32.TryParse(VMCPort, out uOscServer.port))
+        {
+        }
+        else
+        {
+            uOscServer.port = 39539;
+        }
         if (Input.GetKeyDown(InputManager.Instance.UI_Toggle))
         {
             ToggleUI();
@@ -186,6 +209,9 @@ public class UI : Singleton<UI>
 
         if (showUI && showGraphicsSettings && !manualHideUI)
             graphicsSettings = GUI.Window(menus.Length + 4, graphicsSettings, graphicsSettingsButtons, "Graphics Settings");
+
+        if (showUI && showSettings && !manualHideUI)
+            settings = GUI.Window(menus.Length + 5, settings, settingsButtons, "Settings");
     }
 
 
@@ -266,6 +292,20 @@ public class UI : Singleton<UI>
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 
+    void settingsButtons(int windowID)
+    {
+        // enableVsync = GUI.Toggle(new Rect(10, 20, MenuWidth, 20), enableVsync, " Enable VSync");
+        if (GUI.Button(new Rect(10, 40, MenuWidth, 20), "Apply"))
+        {
+            uOscServer.Restart();
+            SaveSettings();
+        }
+        GUI.Label(new Rect(10, 20, 100, 20), "VMC Port");
+        VMCPort = GUI.TextField(new Rect(70, 20, MenuWidth - 60, 20), VMCPort, 8);
+
+        GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+    }
+
     public void ShowUI(bool value)
     {
         showUI = value;
@@ -298,6 +338,15 @@ public class UI : Singleton<UI>
     {
         showHelp = value;
         helpCanvas.GetComponent<Canvas>().enabled = showHelp;
+    }
+
+    void LoadSettings()
+    {
+
+    }
+    void SaveSettings()
+    {
+
     }
 
 }

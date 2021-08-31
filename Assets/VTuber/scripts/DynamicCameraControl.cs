@@ -36,6 +36,7 @@ public class DynamicCameraControl : MonoBehaviour
 
     void Update()
     {
+        cameraSensitivity = UI.Instance.sliderValues[1];
         if (Camera.main != null)
         {
 

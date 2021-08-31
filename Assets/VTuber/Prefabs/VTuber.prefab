@@ -988,7 +988,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2d5c7a03599624385f05d7df3a7661, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraControl: {fileID: 5516828538089831252}
   normalSpeed: 2
   shiftSpeed: 5
   speedCap: 10
@@ -1279,16 +1278,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MenuWidth: 180
-  CamerasContainer: {fileID: 5516828538089831252}
   MainCamera: {fileID: 5516828536720947291}
-  AlignVModel: {fileID: 5516828537792619355}
   ExternalReceiver: {fileID: 956990470074397283}
   sliderValues:
   - 0.05
+  - 1.5
   slidersMin:
   - 0.005
+  - 0.5
   slidersMax:
   - 0.1
+  - 3
 --- !u!114 &5516828537366813967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1349,8 +1349,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd18b065bddc94498b55ac62a36ba96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingsManager: {fileID: 5516828537366813967}
   settingsFile: hotkeys
+  rebindHotkey: 
 --- !u!1 &5516828537451696217
 GameObject:
   m_ObjectHideFlags: 0
@@ -1562,8 +1562,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d08a496e66168bc4fb54d2446856a059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettingsManager: {fileID: 5516828537366813967}
-  UI: {fileID: 5516828537366813966}
   settingsFile: vmodel
   MainCamera: {fileID: 5516828536720947293}
   dragSensitivity: 0.1
@@ -1852,8 +1850,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8892538fb46bde45827ab68f514cb3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WindowScripts: {fileID: 5516828537366813966}
-  SettingsManager: {fileID: 5516828537366813967}
   settingsFile: cameras
   MainCamera: {fileID: 5516828536720947293}
   FixedCamear1: {fileID: 6574628966608553397}
