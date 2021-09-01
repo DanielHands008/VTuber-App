@@ -23,7 +23,7 @@ public class UI : Singleton<UI>
     {
     new string[] { "Save Positions", "Reload Positions", "Slider|1|Sensitivity", "Reset Dynamic Camera" },
     new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Slider|0|Sensitivity", "Reset Position" },
-    new string[] { "Settings", "Graphics Settings", "Hotkeys", "Toggle Mod Loader", "Controls", "Help" }
+    new string[] { "Settings", "Graphics Settings", "Controls", "Hotkeys", "Toggle Mod Loader", "Help" }
     };
     public float[] sliderValues = { 0.1f, 1f };
     public float[] slidersMin = { 0.01f, 0.5f };
@@ -138,7 +138,7 @@ public class UI : Singleton<UI>
         graphicsSettings = new Rect(50 + MenuWidth, 160 + saveAndLoadTopOffset, MenuWidth + 20, 80);
         settings = new Rect(50 + MenuWidth, 250 + saveAndLoadTopOffset, MenuWidth + 20, 80);
 
-        hotkeysEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 430, 30 + (20 * GlobalHotkeys.Instance.hotkeyActions.Length));
+        hotkeysEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 460, 30 + (20 * GlobalHotkeys.Instance.hotkeyActions.Length));
 
         GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
         GlobalEvents.Instance.EventsUI.AddListener(EventsUI);
@@ -336,6 +336,12 @@ public class UI : Singleton<UI>
                     GlobalHotkeys.Instance.RebindKey("");
                 }
 
+            }
+            if (GUI.Button(new Rect(425, 20 + (20 * i), 25, 20), "X"))
+            {
+                if (!rebindInProgress)
+                GlobalHotkeys.Instance.RemoveHotkey(GlobalHotkeys.Instance.hotkeyActions[i]);
+                // GlobalHotkeys.Instance.HotkeyList.Remove(GlobalHotkeys.Instance.hotkeyActions[i]);
             }
         }
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));

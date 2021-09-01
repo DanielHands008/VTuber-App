@@ -96,6 +96,12 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
         }
     }
 
+    public void RemoveHotkey(string action)
+    {
+        HotkeyList.Remove(action);
+        saveHotkeys();
+    }
+
     private void HandleKeyUp(RawKey key)
     {
     }
