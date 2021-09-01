@@ -1315,29 +1315,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43f213d647cca204d936531464e53f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UI_Toggle: 32
-  Move_Forward: 119
-  Move_Left: 97
-  Move_Back: 115
-  Move_Right: 100
-  Move_Fast: 304
-  Move_HeightLock: 306
-  Camera_RotateLeft: 113
-  Camera_RotateRight: 101
-  Camera_RotateReset: 114
-  Camera_ZoomModifier: 306
-  Camera_SelectDynamic: 9
-  Camera_Select1: 49
-  Camera_Select2: 50
-  Camera_Select3: 51
-  Camera_Select4: 52
-  Camera_Select5: 53
-  Camera_Select6: 54
-  Camera_SaveModifier: 306
-  World_Toggle: 104
-  VModel_RotateModifier: 308
-  VModel_SnapZModifier: 306
-  VModel_SnapXModifier: 304
 --- !u!114 &2558274654168197353
 MonoBehaviour:
   m_ObjectHideFlags: 0

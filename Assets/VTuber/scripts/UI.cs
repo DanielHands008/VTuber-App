@@ -23,8 +23,10 @@ public class UI : Singleton<UI>
     {
     new string[] { "Save Positions", "Reload Positions", "Slider|1|Sensitivity", "Reset Dynamic Camera" },
     new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Slider|0|Sensitivity", "Reset Position" },
-    new string[] { "Settings", "Graphics Settings", "Controls", "Hotkeys", "Toggle Mod Loader", "Help" }
+    new string[] { "Settings", "Graphics Settings", "Controls", "Key Bindings", "Hotkeys", "Toggle Mod Loader", "Help" }
     };
+
+    // Look sensitivity, VModel move sensitivity.
     public float[] sliderValues = { 0.1f, 1f };
     public float[] slidersMin = { 0.01f, 0.5f };
     public float[] slidersMax = { 1f, 3f };
@@ -41,6 +43,7 @@ public class UI : Singleton<UI>
     bool showSettings = false;
     bool showGraphicsSettings = false;
     bool showHotkeys = false;
+    bool showKeyBindings = false;
     string[] modelPaths;
     int saveAndLoadTopOffset = 85;
     void MenuItemClicked(int menu, int item)
@@ -91,6 +94,10 @@ public class UI : Singleton<UI>
             {
                 showGraphicsSettings = !showGraphicsSettings;
             }
+            if (buttonName == "Key Bindings")
+            {
+                showKeyBindings = !showKeyBindings;
+            }
             if (buttonName == "Hotkeys")
             {
                 showHotkeys = !showHotkeys;
@@ -114,6 +121,7 @@ public class UI : Singleton<UI>
     Rect settings;
     Rect graphicsSettings;
     Rect hotkeysEditor;
+    Rect keyBindingEditor;
     void Start()
     {
         modLoader = GameObject.Find("ModLoader");
@@ -139,6 +147,7 @@ public class UI : Singleton<UI>
         settings = new Rect(50 + MenuWidth, 250 + saveAndLoadTopOffset, MenuWidth + 20, 80);
 
         hotkeysEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 460, 30 + (20 * GlobalHotkeys.Instance.hotkeyActions.Length));
+        keyBindingEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 300, 30 + (20 * InputManager.Instance.keyboardInputs.Length));
 
         GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
         GlobalEvents.Instance.EventsUI.AddListener(EventsUI);
@@ -148,7 +157,7 @@ public class UI : Singleton<UI>
     {
         if (!Int32.TryParse(VMCPort, out uOscServer.port))
             uOscServer.port = 39539;
-        if (Input.GetKeyDown(InputManager.Instance.UI_Toggle))
+        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("UI_Toggle")))
             ToggleUI();
     }
 
@@ -214,6 +223,9 @@ public class UI : Singleton<UI>
 
         if (showUI && showHotkeys && !manualHideUI)
             hotkeysEditor = GUI.Window(menus.Length + 6, hotkeysEditor, hotkeysEditorButtons, "Hotkeys");
+
+        if (showUI && showKeyBindings && !manualHideUI)
+            keyBindingEditor = GUI.Window(menus.Length + 7, keyBindingEditor, keyBindingEditorButtons, "Hotkeys");
 
 
         if (showUI && showSettings && !manualHideUI)
@@ -310,38 +322,75 @@ public class UI : Singleton<UI>
 
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
-    bool rebindInProgress = false;
-    int keyToRebind = 0;
+    bool hotkeyRebindInProgress = false;
+    int hotkeyToRebind = 0;
     void hotkeysEditorButtons(int windowID)
     {
         for (int i = 0; i < GlobalHotkeys.Instance.hotkeyActions.Length; i++)
         {
             GUI.Label(new Rect(10, 20 + (20 * i), 130, 20), GlobalHotkeys.Instance.hotkeyActions[i]);
             string buttonText = "";
-            if (rebindInProgress && keyToRebind == i)
+            if (hotkeyRebindInProgress && hotkeyToRebind == i)
                 buttonText = "???";
             else
                 buttonText = GlobalHotkeys.Instance.HotkeyList.GetKeysFromActionAsString(GlobalHotkeys.Instance.hotkeyActions[i]);
             if (GUI.Button(new Rect(140, 20 + (20 * i), 280, 20), buttonText))
             {
-                if (!rebindInProgress)
-                {
-                    rebindInProgress = true;
-                    keyToRebind = i;
-                    GlobalHotkeys.Instance.RebindKey(GlobalHotkeys.Instance.hotkeyActions[i]);
-                }
-                else if (keyToRebind == i)
-                {
-                    rebindInProgress = false;
-                    GlobalHotkeys.Instance.RebindKey("");
-                }
+                if (!keyRebindInProgress)
+                    if (!hotkeyRebindInProgress)
+                    {
+                        hotkeyRebindInProgress = true;
+                        hotkeyToRebind = i;
+                        GlobalHotkeys.Instance.RebindKey(GlobalHotkeys.Instance.hotkeyActions[i]);
+                    }
+                    else if (hotkeyToRebind == i)
+                    {
+                        hotkeyRebindInProgress = false;
+                        GlobalHotkeys.Instance.RebindKey("");
+                    }
 
             }
             if (GUI.Button(new Rect(425, 20 + (20 * i), 25, 20), "X"))
             {
-                if (!rebindInProgress)
-                GlobalHotkeys.Instance.RemoveHotkey(GlobalHotkeys.Instance.hotkeyActions[i]);
-                // GlobalHotkeys.Instance.HotkeyList.Remove(GlobalHotkeys.Instance.hotkeyActions[i]);
+                if (!hotkeyRebindInProgress)
+                    GlobalHotkeys.Instance.RemoveHotkey(GlobalHotkeys.Instance.hotkeyActions[i]);
+            }
+        }
+        GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+    }
+    bool keyRebindInProgress = false;
+    int keyToRebind = 0;
+    void keyBindingEditorButtons(int windowID)
+    {
+        string[] inputNames = InputManager.Instance.keyboardInputs.GetInputNames();
+        for (int i = 0; i < inputNames.Length; i++)
+        {
+            GUI.Label(new Rect(10, 20 + (20 * i), 150, 20), inputNames[i]);
+            string buttonText = "";
+            if (keyRebindInProgress && keyToRebind == i)
+                buttonText = "???";
+            else
+                buttonText = InputManager.Instance.keyboardInputs.GetKey(inputNames[i]).ToString();
+            if (GUI.Button(new Rect(160, 20 + (20 * i), 100, 20), buttonText))
+            {
+                if (!hotkeyRebindInProgress)
+                    if (!keyRebindInProgress)
+                    {
+                        keyRebindInProgress = true;
+                        keyToRebind = i;
+                        InputManager.Instance.RebindKey(inputNames[i]);
+                    }
+                    else if (keyToRebind == i)
+                    {
+                        keyRebindInProgress = false;
+                        InputManager.Instance.RebindKey("");
+                    }
+
+            }
+            if (GUI.Button(new Rect(265, 20 + (20 * i), 25, 20), "X"))
+            {
+                if (!keyRebindInProgress)
+                    InputManager.Instance.keyboardInputs.SetKey(inputNames[i], KeyCode.None);
             }
         }
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
@@ -350,7 +399,10 @@ public class UI : Singleton<UI>
     void EventsUI(string eventType)
     {
         if (eventType == "RebindComplete")
-            rebindInProgress = false;
+        {
+            hotkeyRebindInProgress = false;
+            keyRebindInProgress = false;
+        }
     }
 
     public void ShowUI(bool value)
