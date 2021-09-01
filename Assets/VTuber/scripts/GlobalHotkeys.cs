@@ -3,18 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityRawInput;
 using System;
-
+using System.Linq;
 
 public class GlobalHotkeys : Singleton<GlobalHotkeys>
 {
-    // Start is called before the first frame update
-    // https://github.com/Elringus/UnityRawInput
     public string settingsFile = "hotkeys";
 
-    public string rebindHotkey = "";
     Dictionary<RawKey, bool> keyStates = new Dictionary<RawKey, bool>();
 
     public Hotkeys HotkeyList = new Hotkeys();
+
+    public bool hotkeysEnabled = true;
+
+    public string[] hotkeyActions = {
+        "ToggleUI",
+        "ToggleWorld",
+        "SetCameraDynamic",
+        "SetCamera1",
+        "SetCamera2",
+        "SetCamera3",
+        "SetCamera4",
+        "SetCamera5",
+        "SetCamera6",
+        "LoadVModelPreset1",
+        "LoadVModelPreset2",
+        "LoadVModelPreset3",
+        "LoadVModelPreset4",
+        "LoadVModelPreset5",
+        "LoadVModelPreset6",
+    };
 
     RawKey[] modifierList = {
         RawKey.LeftControl,
@@ -27,13 +44,17 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
         RawKey.RightWindows
     };
 
+    string rebindHotkey = "";
+
     void Start()
     {
+        if (!hotkeysEnabled)
+            return;
+
         var workInBackground = true;
         RawKeyInput.Start(workInBackground);
         RawKeyInput.OnKeyUp += HandleKeyUp;
         RawKeyInput.OnKeyDown += HandleKeyDown;
-        // HotkeyList.Set("ToggleUI", RawKey.U, new RawKey[] { RawKey.LeftControl });
         loadHotkeys();
     }
 
@@ -41,27 +62,38 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
     {
     }
 
+    public void RebindKey(string action)
+    {
+        rebindHotkey = action;
+    }
+
     private void HandleKeyDown(RawKey key)
     {
         if (rebindHotkey != "")
         {
             RawKey[] modifiers = new RawKey[0];
-            for (int i = 0; i < modifierList.Length; i++)
+            if (!modifierList.Contains<RawKey>(key))
             {
-                if (RawKeyInput.IsKeyDown(modifierList[i]))
+                for (int i = 0; i < modifierList.Length; i++)
                 {
-                    Array.Resize(ref modifiers, modifiers.Length + 1);
-                    modifiers[modifiers.GetUpperBound(0)] = modifierList[i];
-
+                    if (RawKeyInput.IsKeyDown(modifierList[i]))
+                    {
+                        Array.Resize(ref modifiers, modifiers.Length + 1);
+                        modifiers[modifiers.GetUpperBound(0)] = modifierList[i];
+                    }
                 }
+                HotkeyList.Set(rebindHotkey, key, modifiers);
+                rebindHotkey = "";
+                GlobalEvents.Instance.EventsUI.Invoke("RebindComplete");
+                saveHotkeys();
+                return;
             }
-            HotkeyList.Set(rebindHotkey, key, modifiers);
-            rebindHotkey = "";
-            return;
         }
-
-        string action = HandleHotkey(key);
-        if (action != "") GlobalEvents.Instance.EventsGlobalHotkeys.Invoke(action);
+        else
+        {
+            string action = HandleHotkey(key);
+            if (action != "") GlobalEvents.Instance.EventsGlobalHotkeys.Invoke(action);
+        }
     }
 
     private void HandleKeyUp(RawKey key)
@@ -99,6 +131,8 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
         RawKeyInput.Stop();
 
     }
+
+
 
     public class Hotkey
     {
@@ -173,6 +207,24 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
             }
             return true;
         }
+
+        public string GetKeysFromActionAsString(string action)
+        {
+            for (int i = 0; i < hotkeys.Length; i++)
+            {
+                if (hotkeys[i].Action == action)
+                {
+                    string stringToReturn = "";
+                    for (int j = 0; j < hotkeys[i].Modifiers.Length; j++)
+                    {
+                        stringToReturn += hotkeys[i].Modifiers[j].ToString() + "+";
+                    }
+                    return stringToReturn + hotkeys[i].Key.ToString();
+                }
+            }
+            return "Unbound";
+        }
+
         public Hotkey[] hotkeys = new Hotkey[0];
     }
 
@@ -226,12 +278,9 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 
     public void saveHotkeys()
     {
-        string[] RawKeyNames = Enum.GetNames(typeof(RawKey));
+        //string[] RawKeyNames = Enum.GetNames(typeof(RawKey));
         SaveData saveData = new SaveData(HotkeyList);
-        HotkeyList.Remove("ToggleUI");
-
         string json = JsonUtility.ToJson(saveData);
-        print(json);
         SettingsManager.Instance.saveFile(settingsFile, json);
     }
     public void loadHotkeys()

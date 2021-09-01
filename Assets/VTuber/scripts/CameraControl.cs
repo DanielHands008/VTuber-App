@@ -79,7 +79,9 @@ public class CameraControl : Singleton<CameraControl>
 
     void GlobalHotkeyEvent(string eventName)
     {
-        if (eventName == "SetCamera1")
+        if (eventName == "SetCameraDynamic")
+            setActiveCamera(0);
+        else if (eventName == "SetCamera1")
             setActiveCamera(1);
         else if (eventName == "SetCamera2")
             setActiveCamera(2);

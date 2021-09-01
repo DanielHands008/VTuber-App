@@ -23,13 +23,13 @@ public class UI : Singleton<UI>
     {
     new string[] { "Save Positions", "Reload Positions", "Slider|1|Sensitivity", "Reset Dynamic Camera" },
     new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Slider|0|Sensitivity", "Reset Position" },
-    new string[] { "Settings", "Graphics Settings", "Toggle Mod Loader", "Controls", "Help" }
+    new string[] { "Settings", "Graphics Settings", "Hotkeys", "Toggle Mod Loader", "Controls", "Help" }
     };
     public float[] sliderValues = { 0.1f, 1f };
     public float[] slidersMin = { 0.01f, 0.5f };
     public float[] slidersMax = { 1f, 3f };
     public static bool showUI = true;
-    public string VMCPort = "";
+    [HideInInspector] public string VMCPort = "";
     bool manualHideUI = false;
     bool wasModloaderActive = true;
     bool showSaveVmodalPresets = false;
@@ -40,6 +40,7 @@ public class UI : Singleton<UI>
     bool showHelp = false;
     bool showSettings = false;
     bool showGraphicsSettings = false;
+    bool showHotkeys = false;
     string[] modelPaths;
     int saveAndLoadTopOffset = 85;
     void MenuItemClicked(int menu, int item)
@@ -90,6 +91,10 @@ public class UI : Singleton<UI>
             {
                 showGraphicsSettings = !showGraphicsSettings;
             }
+            if (buttonName == "Hotkeys")
+            {
+                showHotkeys = !showHotkeys;
+            }
             if (buttonName == "Toggle Mod Loader")
             {
                 cameraUnhidesModLoader = !cameraUnhidesModLoader;
@@ -108,6 +113,7 @@ public class UI : Singleton<UI>
     Rect loadVmodel;
     Rect settings;
     Rect graphicsSettings;
+    Rect hotkeysEditor;
     void Start()
     {
         modLoader = GameObject.Find("ModLoader");
@@ -132,22 +138,18 @@ public class UI : Singleton<UI>
         graphicsSettings = new Rect(50 + MenuWidth, 160 + saveAndLoadTopOffset, MenuWidth + 20, 80);
         settings = new Rect(50 + MenuWidth, 250 + saveAndLoadTopOffset, MenuWidth + 20, 80);
 
+        hotkeysEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 430, 30 + (20 * GlobalHotkeys.Instance.hotkeyActions.Length));
+
         GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
+        GlobalEvents.Instance.EventsUI.AddListener(EventsUI);
     }
 
     void Update()
     {
-        if (Int32.TryParse(VMCPort, out uOscServer.port))
-        {
-        }
-        else
-        {
+        if (!Int32.TryParse(VMCPort, out uOscServer.port))
             uOscServer.port = 39539;
-        }
         if (Input.GetKeyDown(InputManager.Instance.UI_Toggle))
-        {
             ToggleUI();
-        }
     }
 
     void GlobalHotkeyEvent(string eventName)
@@ -209,6 +211,10 @@ public class UI : Singleton<UI>
 
         if (showUI && showGraphicsSettings && !manualHideUI)
             graphicsSettings = GUI.Window(menus.Length + 4, graphicsSettings, graphicsSettingsButtons, "Graphics Settings");
+
+        if (showUI && showHotkeys && !manualHideUI)
+            hotkeysEditor = GUI.Window(menus.Length + 6, hotkeysEditor, hotkeysEditorButtons, "Hotkeys");
+
 
         if (showUI && showSettings && !manualHideUI)
             settings = GUI.Window(menus.Length + 5, settings, settingsButtons, "Settings");
@@ -294,7 +300,6 @@ public class UI : Singleton<UI>
 
     void settingsButtons(int windowID)
     {
-        // enableVsync = GUI.Toggle(new Rect(10, 20, MenuWidth, 20), enableVsync, " Enable VSync");
         if (GUI.Button(new Rect(10, 40, MenuWidth, 20), "Apply"))
         {
             uOscServer.Restart();
@@ -304,6 +309,42 @@ public class UI : Singleton<UI>
         VMCPort = GUI.TextField(new Rect(70, 20, MenuWidth - 60, 20), VMCPort, 8);
 
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+    }
+    bool rebindInProgress = false;
+    int keyToRebind = 0;
+    void hotkeysEditorButtons(int windowID)
+    {
+        for (int i = 0; i < GlobalHotkeys.Instance.hotkeyActions.Length; i++)
+        {
+            GUI.Label(new Rect(10, 20 + (20 * i), 130, 20), GlobalHotkeys.Instance.hotkeyActions[i]);
+            string buttonText = "";
+            if (rebindInProgress && keyToRebind == i)
+                buttonText = "???";
+            else
+                buttonText = GlobalHotkeys.Instance.HotkeyList.GetKeysFromActionAsString(GlobalHotkeys.Instance.hotkeyActions[i]);
+            if (GUI.Button(new Rect(140, 20 + (20 * i), 280, 20), buttonText))
+            {
+                if (!rebindInProgress)
+                {
+                    rebindInProgress = true;
+                    keyToRebind = i;
+                    GlobalHotkeys.Instance.RebindKey(GlobalHotkeys.Instance.hotkeyActions[i]);
+                }
+                else if (keyToRebind == i)
+                {
+                    rebindInProgress = false;
+                    GlobalHotkeys.Instance.RebindKey("");
+                }
+
+            }
+        }
+        GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+    }
+
+    void EventsUI(string eventType)
+    {
+        if (eventType == "RebindComplete")
+            rebindInProgress = false;
     }
 
     public void ShowUI(bool value)
