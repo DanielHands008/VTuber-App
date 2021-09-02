@@ -23,7 +23,6 @@ public class InputManager : Singleton<InputManager>
             keyBindings.Add("Camera_RotateLeft", KeyCode.Q);
             keyBindings.Add("Camera_RotateRight", KeyCode.E);
             keyBindings.Add("Camera_RotateReset", KeyCode.R);
-            keyBindings.Add("Camera_ZoomModifier", KeyCode.LeftControl);
             keyBindings.Add("Camera_SelectDynamic", KeyCode.Tab);
             keyBindings.Add("Camera_Select1", KeyCode.Alpha1);
             keyBindings.Add("Camera_Select2", KeyCode.Alpha2);

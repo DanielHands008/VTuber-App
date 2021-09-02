@@ -69,6 +69,9 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 
     private void HandleKeyDown(RawKey key)
     {
+        if (!hotkeysEnabled)
+            return;
+            
         if (rebindHotkey != "")
         {
             RawKey[] modifiers = new RawKey[0];

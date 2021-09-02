@@ -1245,7 +1245,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffb0af4f59483f44e8a0bacb895b122a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MenuWidth: 180
+  MenuWidth: 160
   MainCamera: {fileID: 5516828536720947291}
   ExternalReceiver: {fileID: 956990470074397283}
   sliderValues:
