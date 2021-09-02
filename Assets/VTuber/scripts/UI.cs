@@ -51,13 +51,13 @@ public class UI : Singleton<UI>
         string menuName = menusNames[menu];
         string buttonName = menus[menu][item];
         print("Item " + item + " of menu " + menu + " clicked.");
-        if (menu == 0) // Camera Settings
+        if (menuName == "Camera Settings") // Camera Settings
         {
-            if (item == 0) // Save Positions
+            if (buttonName == "Save Positions") // Save Positions
                 CameraControl.Instance.saveCamerasToFile();
-            if (item == 1) // Reload Positions
+            if (buttonName == "Reload Positions") // Reload Positions
                 CameraControl.Instance.loadCamerasFromFile();
-            if (item == 2) // Reset Dynamic Camera
+            if (buttonName == "Reset Dynamic Camera") // Reset Dynamic Camera
                 MainCamera.resetPosition();
         }
         if (menuName == "VModel")
@@ -240,8 +240,9 @@ public class UI : Singleton<UI>
             if (menus[windowID][i].StartsWith("Slider|"))
             {
                 string[] parts = menus[windowID][i].Split('|');
-                GUI.Label(new Rect(10, 20 + (20 * i), MenuWidth / 2, 20), parts[2]);
-                sliderValues[int.Parse(parts[1])] = GUI.HorizontalSlider(new Rect(10 + MenuWidth / 2, 25 + (20 * i), MenuWidth / 2, 20), sliderValues[int.Parse(parts[1])], slidersMin[int.Parse(parts[1])], slidersMax[int.Parse(parts[1])]);
+                GUI.Label(new Rect(10, 20 + (20 * i), (float)(MenuWidth / 2.5), 20), parts[2]);
+                sliderValues[int.Parse(parts[1])] = GUI.HorizontalSlider(new Rect((float)(10 + MenuWidth / 2.5), 25 + (20 * i), (float)(MenuWidth / 2) - 30, 20), sliderValues[int.Parse(parts[1])], slidersMin[int.Parse(parts[1])], slidersMax[int.Parse(parts[1])]);
+                sliderValues[int.Parse(parts[1])] = float.Parse(GUI.TextField(new Rect(10 + (float)(MenuWidth * 0.75), 20 + (20 * i), (float)(MenuWidth * 0.3) - 10, 20), sliderValues[int.Parse(parts[1])].ToString(), 16));
             }
             else
             if (GUI.Button(new Rect(10, 20 + (20 * i), MenuWidth, 20), menus[windowID][i]))
