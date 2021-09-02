@@ -13,7 +13,6 @@ public class UI : Singleton<UI>
     public DynamicCameraControl MainCamera;
     public ExternalReceiver ExternalReceiver;
     GameObject modLoader;
-    GameObject helpCanvas;
     uOscServer uOscServer;
     bool enableVsync = true;
     string maxFPSString = "60";
@@ -23,7 +22,7 @@ public class UI : Singleton<UI>
     {
     new string[] { "Save Positions", "Reload Positions", "Slider|1|Sensitivity", "Reset Dynamic Camera" },
     new string[] { "Save Preset", "Load Preset", "Load Model", "Drag Type:", "Slider|0|Sensitivity", "Reset Position" },
-    new string[] { "Settings", "Graphics Settings", "Controls", "Key Bindings", "Hotkeys", "Toggle Mod Loader", "Help" }
+    new string[] { "Settings", "Graphics Settings", "Key Bindings", "Hotkeys", "Toggle Mod Loader", "Help" }
     };
 
     // Look sensitivity, VModel move sensitivity.
@@ -39,7 +38,6 @@ public class UI : Singleton<UI>
     bool showLoadVmodels = false;
     bool showModLoader = true;
     bool cameraUnhidesModLoader = true;
-    bool showHelp = false;
     bool showSettings = false;
     bool showGraphicsSettings = false;
     bool showHotkeys = false;
@@ -107,10 +105,6 @@ public class UI : Singleton<UI>
                 cameraUnhidesModLoader = !cameraUnhidesModLoader;
                 toggleModloader(!showModLoader);
             }
-            if (buttonName == "Controls")
-            {
-                toggleHelp();
-            }
         }
     }
 
@@ -125,9 +119,7 @@ public class UI : Singleton<UI>
     void Start()
     {
         modLoader = GameObject.Find("ModLoader");
-        helpCanvas = GameObject.Find("Help");
         uOscServer = GameObject.Find("ExternalReceiver").GetComponent<uOscServer>();
-        helpCanvas.GetComponent<Canvas>().enabled = false;
         VMCPort = uOscServer.port.ToString();
 
         LoadSettings();
@@ -428,16 +420,6 @@ public class UI : Singleton<UI>
     {
         showModLoader = value;
         modLoader.SetActive(showModLoader);
-    }
-
-    public void toggleHelp()
-    {
-        toggleHelp(!showHelp);
-    }
-    public void toggleHelp(bool value)
-    {
-        showHelp = value;
-        helpCanvas.GetComponent<Canvas>().enabled = showHelp;
     }
 
     void LoadSettings()
