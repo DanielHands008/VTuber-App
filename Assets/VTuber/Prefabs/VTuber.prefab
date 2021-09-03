@@ -1283,6 +1283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43f213d647cca204d936531464e53f09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingsFile: keybinds
 --- !u!114 &2558274654168197353
 MonoBehaviour:
   m_ObjectHideFlags: 0
