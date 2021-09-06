@@ -139,7 +139,7 @@ public class UI : Singleton<UI>
         settings = new Rect(50 + MenuWidth, 250 + saveAndLoadTopOffset, MenuWidth + 20, 80);
 
         hotkeysEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 460, 30 + (20 * GlobalHotkeys.Instance.hotkeyActions.Length));
-        keyBindingEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 300, 30 + (20 * InputManager.Instance.keyboardInputs.Length));
+        keyBindingEditor = new Rect(50 + MenuWidth, 200 + saveAndLoadTopOffset, 300, 30 + (20 * InputManager.Instance.Length));
 
         GlobalEvents.Instance.EventsGlobalHotkeys.AddListener(GlobalHotkeyEvent);
         GlobalEvents.Instance.EventsUI.AddListener(EventsUI);
@@ -149,7 +149,7 @@ public class UI : Singleton<UI>
     {
         if (!Int32.TryParse(VMCPort, out uOscServer.port))
             uOscServer.port = 39539;
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("UI_Toggle")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("UI_Toggle")))
             ToggleUI();
     }
 
@@ -217,7 +217,7 @@ public class UI : Singleton<UI>
             hotkeysEditor = GUI.Window(menus.Length + 6, hotkeysEditor, hotkeysEditorButtons, "Hotkeys");
 
         if (showUI && showKeyBindings && !manualHideUI)
-            keyBindingEditor = GUI.Window(menus.Length + 7, keyBindingEditor, keyBindingEditorButtons, "Hotkeys");
+            keyBindingEditor = GUI.Window(menus.Length + 7, keyBindingEditor, keyBindingEditorButtons, "Key Bindings");
 
 
         if (showUI && showSettings && !manualHideUI)
@@ -355,7 +355,7 @@ public class UI : Singleton<UI>
     int keyToRebind = 0;
     void keyBindingEditorButtons(int windowID)
     {
-        string[] inputNames = InputManager.Instance.keyboardInputs.GetInputNames();
+        string[] inputNames = InputManager.Instance.GetInputNames();
         for (int i = 0; i < inputNames.Length; i++)
         {
             GUI.Label(new Rect(10, 20 + (20 * i), 150, 20), inputNames[i]);
@@ -363,7 +363,7 @@ public class UI : Singleton<UI>
             if (keyRebindInProgress && keyToRebind == i)
                 buttonText = "???";
             else
-                buttonText = InputManager.Instance.keyboardInputs.GetKey(inputNames[i]).ToString();
+                buttonText = InputManager.Instance.Get(inputNames[i]).ToString();
             if (GUI.Button(new Rect(160, 20 + (20 * i), 100, 20), buttonText))
             {
                 if (!hotkeyRebindInProgress)
@@ -383,7 +383,7 @@ public class UI : Singleton<UI>
             if (GUI.Button(new Rect(265, 20 + (20 * i), 25, 20), "X"))
             {
                 if (!keyRebindInProgress)
-                    InputManager.Instance.keyboardInputs.SetKey(inputNames[i], KeyCode.None);
+                    InputManager.Instance.Remove(inputNames[i]);
             }
         }
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));

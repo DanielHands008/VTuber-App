@@ -167,19 +167,19 @@ public class AlignVModel : Singleton<AlignVModel>
                     dragEnabled = true;
                 }
             }
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("VModel_SnapXModifier")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("VModel_SnapXModifier")))
                 moveY = 0;
-            if (Input.GetKeyUp(InputManager.Instance.keyboardInputs.GetKey("VModel_SnapXModifier")))
+            if (Input.GetKeyUp(InputManager.Instance.Get("VModel_SnapXModifier")))
                 moveY = 1;
 
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("VModel_SnapZModifier")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("VModel_SnapZModifier")))
                 moveX = 0;
-            if (Input.GetKeyUp(InputManager.Instance.keyboardInputs.GetKey("VModel_SnapZModifier")))
+            if (Input.GetKeyUp(InputManager.Instance.Get("VModel_SnapZModifier")))
                 moveX = 1;
 
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("VModel_RotateModifier")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("VModel_RotateModifier")))
                 rotateVmodel = true;
-            if (Input.GetKeyUp(InputManager.Instance.keyboardInputs.GetKey("VModel_RotateModifier")))
+            if (Input.GetKeyUp(InputManager.Instance.Get("VModel_RotateModifier")))
                 rotateVmodel = false;
         }
         if (Input.GetMouseButtonUp(2))

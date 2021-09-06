@@ -1198,8 +1198,8 @@ GameObject:
   - component: {fileID: 5516828537366814000}
   - component: {fileID: 5516828537366813966}
   - component: {fileID: 5516828537366813967}
-  - component: {fileID: 3432909790430363410}
   - component: {fileID: 2558274654168197353}
+  - component: {fileID: 3230900130921608075}
   m_Layer: 0
   m_Name: Window Scripts
   m_TagString: Untagged
@@ -1271,19 +1271,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsFolder: settings
---- !u!114 &3432909790430363410
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5516828537366814003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43f213d647cca204d936531464e53f09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  settingsFile: keybinds
 --- !u!114 &2558274654168197353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1297,7 +1284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingsFile: hotkeys
-  hotkeysEnabled: 1
+  hotkeysEnabled: 0
   hotkeyActions:
   - ToggleUI
   - ToggleWorld
@@ -1314,6 +1301,65 @@ MonoBehaviour:
   - LoadVModelPreset4
   - LoadVModelPreset5
   - LoadVModelPreset6
+--- !u!114 &3230900130921608075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5516828537366814003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43f213d647cca204d936531464e53f09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settingsFile: keybinds
+  keyBindings:
+    array:
+    - Key: UI_Toggle
+      Value: 32
+    - Key: Camera_SaveModifier
+      Value: 306
+    - Key: Camera_RotateLeft
+      Value: 113
+    - Key: Camera_SelectDynamic
+      Value: 9
+    - Key: VModel_RotateModifier
+      Value: 308
+    - Key: World_Toggle
+      Value: 104
+    - Key: Camera_Select5
+      Value: 53
+    - Key: Camera_Select6
+      Value: 54
+    - Key: Move_Right
+      Value: 100
+    - Key: Camera_RotateRight
+      Value: 101
+    - Key: VModel_SnapZModifier
+      Value: 306
+    - Key: Move_Fast
+      Value: 304
+    - Key: Camera_Select2
+      Value: 50
+    - Key: Camera_Select1
+      Value: 49
+    - Key: Move_Forward
+      Value: 119
+    - Key: VModel_SnapXModifier
+      Value: 304
+    - Key: Move_Back
+      Value: 115
+    - Key: Move_HeightLock
+      Value: 306
+    - Key: Camera_RotateReset
+      Value: 114
+    - Key: Move_Left
+      Value: 97
+    - Key: Camera_Select4
+      Value: 52
+    - Key: Camera_Select3
+      Value: 51
 --- !u!1 &5516828537451696217
 GameObject:
   m_ObjectHideFlags: 0

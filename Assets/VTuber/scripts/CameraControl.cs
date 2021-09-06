@@ -102,37 +102,37 @@ public class CameraControl : Singleton<CameraControl>
     {
 
         // https://docs.unity3d.com/ScriptReference/KeyCode.html
-        if (Input.GetKey(InputManager.Instance.keyboardInputs.GetKey("Camera_SaveModifier")))
+        if (Input.GetKey(InputManager.Instance.Get("Camera_SaveModifier")))
         {
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select1")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select1")))
                 setCamera(1);
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select2")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select2")))
                 setCamera(2);
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select3")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select3")))
                 setCamera(3);
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select4")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select4")))
                 setCamera(4);
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select5")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select5")))
                 setCamera(5);
-            if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select6")))
+            if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select6")))
                 setCamera(6);
         }
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select1")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select1")))
             setActiveCamera(1);
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select2")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select2")))
             setActiveCamera(2);
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select3")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select3")))
             setActiveCamera(3);
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select4")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select4")))
             setActiveCamera(4);
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select5")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select5")))
             setActiveCamera(5);
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_Select6")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("Camera_Select6")))
             setActiveCamera(6);
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("Camera_SelectDynamic")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("Camera_SelectDynamic")))
             setActiveCamera(0);
 
-        if (Input.GetKeyDown(InputManager.Instance.keyboardInputs.GetKey("World_Toggle")))
+        if (Input.GetKeyDown(InputManager.Instance.Get("World_Toggle")))
             ToggleWorld();
 
     }
