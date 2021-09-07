@@ -9,9 +9,7 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 {
     public string settingsFile = "hotkeys";
 
-    Dictionary<RawKey, bool> keyStates = new Dictionary<RawKey, bool>();
-
-    public Hotkeys HotkeyList = new Hotkeys();
+    public SerializableDictionary<string, Hotkey> Hotkeys = new SerializableDictionary<string, Hotkey> { };
 
     public bool hotkeysEnabled = true;
 
@@ -46,6 +44,22 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 
     string rebindHotkey = "";
 
+    [System.Serializable]
+    public class Hotkey
+    {
+        public Hotkey()
+        { }
+
+        public Hotkey(RawKey key, RawKey[] modifiers)
+        {
+            Key = key;
+            Modifiers = modifiers;
+        }
+
+        public RawKey Key;
+        public RawKey[] Modifiers;
+    }
+
     void Start()
     {
         if (!hotkeysEnabled)
@@ -61,6 +75,33 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
     void Update()
     {
     }
+    public void Set(string action, Hotkey newHotkey)
+    {
+        if (Hotkeys.ContainsKey(action))
+            Hotkeys[action] = newHotkey;
+        else
+            Hotkeys.Add(new SerializableDictionary<string, Hotkey>.Pair(action, newHotkey));
+        saveHotkeys();
+    }
+    public void Remove(string action)
+    {
+        if (Hotkeys.ContainsKey(action))
+            Hotkeys.Remove(action);
+        saveHotkeys();
+    }
+
+    public string GetHotkeyAsString(string action)
+    {
+        if (!Hotkeys.ContainsKey(action))
+            return "Not Set";
+        string hotkeyAsString = "";
+        for (int i = 0; i < Hotkeys[action].Modifiers.Length; i++)
+        {
+            hotkeyAsString += Hotkeys[action].Modifiers[i].ToString() + "+";
+        }
+        hotkeyAsString += Hotkeys[action].Key.ToString();
+        return hotkeyAsString;
+    }
 
     public void RebindKey(string action)
     {
@@ -71,7 +112,7 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
     {
         if (!hotkeysEnabled)
             return;
-            
+
         if (rebindHotkey != "")
         {
             RawKey[] modifiers = new RawKey[0];
@@ -85,10 +126,9 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
                         modifiers[modifiers.GetUpperBound(0)] = modifierList[i];
                     }
                 }
-                HotkeyList.Set(rebindHotkey, key, modifiers);
+                Set(rebindHotkey, new Hotkey(key, modifiers));
                 rebindHotkey = "";
                 GlobalEvents.Instance.EventsUI.Invoke("RebindComplete");
-                saveHotkeys();
                 return;
             }
         }
@@ -99,11 +139,7 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
         }
     }
 
-    public void RemoveHotkey(string action)
-    {
-        HotkeyList.Remove(action);
-        saveHotkeys();
-    }
+
 
     private void HandleKeyUp(RawKey key)
     {
@@ -111,23 +147,22 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
 
     private string HandleHotkey(RawKey key)
     {
-
-        for (int i = 0; i < HotkeyList.hotkeys.Length; i++)
+        string[] actions = new List<string>(Hotkeys.Keys).ToArray();
+        for (int i = 0; i < actions.Length; i++)
         {
-            if (HotkeyList.hotkeys[i].Key == key)
+            if (Hotkeys[actions[i]].Key == key)
             {
-                int modifierCount = 0;
+                int modifiersDown = 0;
                 for (int j = 0; j < modifierList.Length; j++)
                 {
                     if (RawKeyInput.IsKeyDown(modifierList[j]))
-                    {
-                        if (Array.Exists(HotkeyList.hotkeys[i].Modifiers, element => element == modifierList[j]))
-                            modifierCount++;
-                        else modifierCount--;
-                    }
+                        if (Array.Exists(Hotkeys[actions[i]].Modifiers, element => element == modifierList[j]))
+                            modifiersDown++;
+                        else
+                            modifiersDown--;
                 }
-                if (modifierCount == HotkeyList.hotkeys[i].Modifiers.Length)
-                    return HotkeyList.hotkeys[i].Action;
+                if (modifiersDown == Hotkeys[actions[i]].Modifiers.Length)
+                    return actions[i];
             }
         }
         return "";
@@ -138,167 +173,18 @@ public class GlobalHotkeys : Singleton<GlobalHotkeys>
         RawKeyInput.OnKeyUp -= HandleKeyUp;
         RawKeyInput.OnKeyDown -= HandleKeyDown;
         RawKeyInput.Stop();
-
-    }
-
-
-
-    public class Hotkey
-    {
-        public Hotkey(string action, RawKey key, RawKey[] modifiers)
-        {
-            Action = action;
-            Key = key;
-            Modifiers = modifiers;
-        }
-        public RawKey Key;
-        public RawKey[] Modifiers;
-        public string Action;
-    }
-
-    public class Hotkeys
-    {
-        public bool Add(Hotkey hotkey)
-        {
-            print(hotkey);
-            // Check if action is already assigned.
-            Array.Resize(ref hotkeys, hotkeys.Length + 1);
-            hotkeys[hotkeys.GetUpperBound(0)] = hotkey;
-            return true;
-        }
-        public bool Remove(string action)
-        {
-            for (int i = 0; i < hotkeys.Length; i++)
-            {
-                if (hotkeys[i].Action == action)
-                {
-                    RemoveAt<Hotkey>(ref hotkeys, i);
-                    return true;
-                }
-            }
-            return false;
-        }
-        public bool Replace(Hotkey hotkey)
-        {
-            for (int i = 0; i < hotkeys.Length; i++)
-            {
-                if (hotkeys[i].Action == hotkey.Action)
-                {
-                    hotkeys[i] = hotkey;
-                    return true;
-                }
-            }
-            return false;
-        }
-        public bool Set(string action, RawKey key, RawKey[] modifiers)
-        {
-            for (int i = 0; i < hotkeys.Length; i++)
-            {
-                if (hotkeys[i].Action == action)
-                {
-                    return Replace(new Hotkey(action, key, modifiers));
-                }
-            }
-            return Add(new Hotkey(action, key, modifiers));
-        }
-        public bool Load(SaveData input)
-        {
-            // Enum.Parse(typeof(RawKey), "A")
-            Array.Resize(ref hotkeys, input.GlobalHotkeys.Length);
-            for (int i = 0; i < input.GlobalHotkeys.Length; i++)
-            {
-                RawKey[] newModifiers = new RawKey[input.GlobalHotkeys[i].Modifiers.Length];
-                for (int j = 0; j < input.GlobalHotkeys[i].Modifiers.Length; j++)
-                {
-                    newModifiers[j] = (RawKey)Enum.Parse(typeof(RawKey), input.GlobalHotkeys[i].Modifiers[j]);
-                }
-                hotkeys[i] = new Hotkey(input.GlobalHotkeys[i].Action, (RawKey)Enum.Parse(typeof(RawKey), input.GlobalHotkeys[i].Key), newModifiers);
-            }
-            return true;
-        }
-
-        public string GetKeysFromActionAsString(string action)
-        {
-            for (int i = 0; i < hotkeys.Length; i++)
-            {
-                if (hotkeys[i].Action == action)
-                {
-                    string stringToReturn = "";
-                    for (int j = 0; j < hotkeys[i].Modifiers.Length; j++)
-                    {
-                        stringToReturn += hotkeys[i].Modifiers[j].ToString() + "+";
-                    }
-                    return stringToReturn + hotkeys[i].Key.ToString();
-                }
-            }
-            return "Unbound";
-        }
-
-        public Hotkey[] hotkeys = new Hotkey[0];
-    }
-
-    public static void RemoveAt<T>(ref T[] arr, int index)
-    {
-        for (int a = index; a < arr.Length - 1; a++)
-        {
-            // moving elements downwards, to fill the gap at [index]
-            arr[a] = arr[a + 1];
-        }
-        // finally, let's decrement Array's size by one
-        Array.Resize(ref arr, arr.Length - 1);
-    }
-
-    [System.Serializable]
-    public class HotkeyForSave
-    {
-        public HotkeyForSave(Hotkey hotkey)
-        {
-            Action = hotkey.Action;
-            Key = hotkey.Key.ToString();
-            Array.Resize(ref Modifiers, hotkey.Modifiers.Length);
-            for (int i = 0; i < hotkey.Modifiers.Length; i++)
-            {
-                Modifiers[i] = hotkey.Modifiers[i].ToString();
-            }
-        }
-        public string Action;
-        public string Key;
-        public string[] Modifiers;
-    }
-
-    [System.Serializable]
-    public class SaveData
-    {
-        public SaveData()
-        {
-
-        }
-        public SaveData(Hotkeys input)
-        {
-            Array.Resize(ref GlobalHotkeys, input.hotkeys.Length);
-            for (int i = 0; i < input.hotkeys.Length; i++)
-            {
-                GlobalHotkeys[i] = new HotkeyForSave(input.hotkeys[i]);
-            }
-        }
-
-        public HotkeyForSave[] GlobalHotkeys = new HotkeyForSave[0];
     }
 
     public void saveHotkeys()
     {
-        //string[] RawKeyNames = Enum.GetNames(typeof(RawKey));
-        SaveData saveData = new SaveData(HotkeyList);
-        string json = JsonUtility.ToJson(saveData);
+        string json = JsonUtility.ToJson(Hotkeys);
         SettingsManager.Instance.saveFile(settingsFile, json);
     }
     public void loadHotkeys()
     {
         string json = SettingsManager.Instance.loadFile(settingsFile);
         if (json == "") return;
-        SaveData saveData = new SaveData();
-        JsonUtility.FromJsonOverwrite(json, saveData);
-        HotkeyList.Load(saveData);
+        JsonUtility.FromJsonOverwrite(json, Hotkeys);
     }
 }
 

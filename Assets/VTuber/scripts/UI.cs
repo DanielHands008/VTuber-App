@@ -326,7 +326,7 @@ public class UI : Singleton<UI>
             if (hotkeyRebindInProgress && hotkeyToRebind == i)
                 buttonText = "???";
             else
-                buttonText = GlobalHotkeys.Instance.HotkeyList.GetKeysFromActionAsString(GlobalHotkeys.Instance.hotkeyActions[i]);
+                buttonText = GlobalHotkeys.Instance.GetHotkeyAsString(GlobalHotkeys.Instance.hotkeyActions[i]);
             if (GUI.Button(new Rect(140, 20 + (20 * i), 280, 20), buttonText))
             {
                 if (!keyRebindInProgress)
@@ -346,7 +346,7 @@ public class UI : Singleton<UI>
             if (GUI.Button(new Rect(425, 20 + (20 * i), 25, 20), "X"))
             {
                 if (!hotkeyRebindInProgress)
-                    GlobalHotkeys.Instance.RemoveHotkey(GlobalHotkeys.Instance.hotkeyActions[i]);
+                    GlobalHotkeys.Instance.Remove(GlobalHotkeys.Instance.hotkeyActions[i]);
             }
         }
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
